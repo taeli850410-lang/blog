@@ -265,8 +265,17 @@ textarea.form-input{min-height:82px;line-height:1.75}
 .check-link-url{font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
 .check-link-row.checked .check-link-url{color:var(--primary)}
 
+/* OPTION CARD (헤더 띠 + 본문) */
+.opt-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow)}
+.opt-card-head{background:var(--grad-bar);color:#fff;padding:13px 17px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:9px;letter-spacing:-.2px}
+.opt-card-body{padding:16px 17px;display:flex;flex-direction:column;gap:14px}
+
+.type-hint{background:var(--bg);border:1px solid var(--border-soft);border-radius:var(--r);padding:11px 13px;font-size:12px;color:var(--muted);line-height:1.75;display:flex;flex-direction:column;gap:3px}
+.type-hint b{color:var(--primary);font-weight:700}
+.type-hint span{color:var(--body)}
+
 /* OUTPUT FORMAT */
-.format-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 17px;display:flex;flex-direction:column;gap:14px}
+.format-box{display:flex;flex-direction:column;gap:14px}
 .format-row{display:flex;flex-direction:column;gap:7px}
 .format-row-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px}
 .format-btn-group{display:flex;gap:7px}
@@ -416,12 +425,20 @@ textarea.form-input{min-height:82px;line-height:1.75}
   <div class="panel-left">
 
     <!-- 콘텐츠 유형 -->
-    <div class="section-divider"><span>콘텐츠 유형</span></div>
-    <div class="type-grid">
-      <button class="intent-btn active" data-type="naver" onclick="setContentType(this)">① 네이버 블로그 SEO</button>
-      <button class="intent-btn" data-type="tistory" onclick="setContentType(this)">② 티스토리 블로그 SEO</button>
-      <button class="intent-btn" data-type="article" onclick="setContentType(this)">③ 기사글</button>
-      <button class="intent-btn" data-type="column" onclick="setContentType(this)">④ 컬럼글</button>
+    <div class="opt-card">
+      <div class="opt-card-head">✍️ 무엇을 쓸까요</div>
+      <div class="opt-card-body">
+        <div class="format-row">
+          <span class="format-row-label">콘텐츠 유형</span>
+          <div class="type-grid">
+            <button class="intent-btn active" data-type="naver" onclick="setContentType(this)">① 네이버 블로그 SEO</button>
+            <button class="intent-btn" data-type="tistory" onclick="setContentType(this)">② 티스토리 블로그 SEO</button>
+            <button class="intent-btn" data-type="article" onclick="setContentType(this)">③ 기사글</button>
+            <button class="intent-btn" data-type="column" onclick="setContentType(this)">④ 컬럼글</button>
+          </div>
+        </div>
+        <div class="type-hint" id="type-hint"></div>
+      </div>
     </div>
 
     <div class="form-group">
@@ -570,8 +587,9 @@ textarea.form-input{min-height:82px;line-height:1.75}
     </div><!-- /seo-only-block -->
 
     <!-- 출력 형식 -->
-    <div class="section-divider"><span>출력 형식</span></div>
-    <div class="format-box">
+    <div class="opt-card">
+      <div class="opt-card-head">🎨 출력 형식</div>
+      <div class="opt-card-body">
       <div class="format-row">
         <span class="format-row-label">무엇을 만들까요</span>
         <div class="format-btn-group">
@@ -598,7 +616,8 @@ textarea.form-input{min-height:82px;line-height:1.75}
           </div>
         </div>
       </div>
-    </div>
+      </div><!-- /opt-card-body -->
+    </div><!-- /opt-card -->
 
     <!-- 생성 버튼 -->
     <button class="btn-generate" id="btn-gen" onclick="generate()">
@@ -782,6 +801,22 @@ let faqCount = 0;
 let currentContentType = 'naver';
 let outputFormat = 'html';
 
+// 유형별 핵심 차이 (프롬프트 스펙의 비교표 기준)
+const TYPE_HINTS = {
+  naver:   { purpose: '검색 유입 + 경험 전달', structure: '네이버 좋은문서 8요소', voice: '1인칭(경험자)', length: '1,500자 이상' },
+  tistory: { purpose: '검색 유입 + 문제 해결', structure: '검색의도 기반 모듈형', voice: '1인칭(경험자)', length: '2,000~4,000자' },
+  article: { purpose: '사실 전달',            structure: '역피라미드',           voice: '3인칭(관찰자)', length: '800~3,500자' },
+  column:  { purpose: '주장 설득',            structure: '논증(주장-근거-반론-제언)', voice: '1인칭(전문가)', length: '1,600~2,400자' }
+};
+
+function renderTypeHint() {
+  const h = TYPE_HINTS[currentContentType];
+  document.getElementById('type-hint').innerHTML =
+    `<div><b>목적</b> <span>${escapeHtml(h.purpose)}</span></div>` +
+    `<div><b>구조</b> <span>${escapeHtml(h.structure)}</span></div>` +
+    `<div><b>화자</b> <span>${escapeHtml(h.voice)}</span> · <b>분량</b> <span>${escapeHtml(h.length)}</span></div>`;
+}
+
 function setContentType(btn) {
   document.querySelectorAll('.type-grid .intent-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -790,6 +825,7 @@ function setContentType(btn) {
   document.getElementById('seo-only-block').style.display = isBlog ? '' : 'none';
   document.getElementById('group-article-fields').style.display = isBlog ? 'none' : '';
   setOutputFormat(isBlog ? 'html' : 'article');
+  renderTypeHint();
 }
 
 function setOutputFormat(fmt) {
@@ -1171,6 +1207,7 @@ document.addEventListener('keydown', e => {
     document.getElementById('meta-char').textContent = this.value.length + ' / 160자';
   });
   addFaq(); addFaq(); addFaq();
+  renderTypeHint();
 })();
 
 // ── Unsplash Auto Fetch ──
