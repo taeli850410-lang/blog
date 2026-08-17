@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>블로그 자동생기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#eef4fc;
+  --surface:#ffffff;
+  --surface2:#f4f8fd;
+  --surface3:#e8f1fb;
+  --border:#d6e4f5;
+  --primary:#3B7DEB;
+  --primary-dark:#2A63C7;
+  --primary-dim:#e7f0fe;
+  --primary-text:#ffffff;
+  --text:#1c2b3d;
+  --muted:#5c7290;
+  --green:#16a34a;
+  --blue:#3B7DEB;
+  --shadow:0 1px 3px rgba(30,60,110,.08), 0 1px 2px rgba(30,60,110,.06);
+}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;font-size:16px}
+
+/* LAYOUT */
+.app{display:grid;grid-template-rows:56px 1fr;grid-template-columns:420px 1fr;min-height:100vh}
+
+/* TOP BAR */
+.top-bar{
+  grid-column:1 / -1;
+  background:#ffffff;
+  border-bottom:2px solid var(--primary);
+  box-shadow:var(--shadow);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;
+}
+.top-bar-left{display:flex;align-items:center;gap:12px}
+.top-bar-title{font-size:15px;font-weight:700;color:var(--primary)}
+.top-bar-sub{font-size:13px;color:var(--muted)}
+.top-bar-divider{width:1px;height:18px;background:var(--border)}
+.badge-free{background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.5px}
+
+/* PANELS */
+.panel-left{background:var(--surface);border-right:1px solid var(--border);padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:16px}
+.panel-right{padding:24px;overflow-y:auto;background:var(--bg)}
+
+/* FORM */
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.label-badge{font-size:11px;padding:1px 5px;border-radius:2px;text-transform:none;letter-spacing:0;font-weight:700}
+.label-badge.req{background:var(--primary);color:var(--primary-text)}
+.label-badge.seo{background:#1d4ed8;color:#fff}
+.label-badge.auto{background:#dcfce7;color:#15803d}
+.label-badge.opt{background:#e2e8f0;color:#64748b}
+.form-input{
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);font-family:'Noto Sans KR',sans-serif;
+  font-size:15px;padding:11px 12px;border-radius:6px;
+  outline:none;resize:vertical;transition:border-color .15s;
+}
+.form-input:focus{border-color:var(--primary)}
+.form-input::placeholder{color:#94a7c0}
+textarea.form-input{min-height:80px;line-height:1.7}
+select.form-input{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%233B7DEB'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.char-hint{font-size:12px;color:var(--muted);text-align:right;margin-top:2px}
+
+/* SECTION DIVIDER */
+.section-divider{display:flex;align-items:center;gap:8px;margin:4px 0}
+.section-divider span{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* INTENT */
+.intent-group{display:flex;gap:6px}
+.intent-btn{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;padding:9px 4px;border-radius:5px;cursor:pointer;transition:all .15s;text-align:center}
+.intent-btn.active{background:var(--primary-dim);border-color:var(--primary);color:var(--primary-dark)}
+
+/* FAQ */
+.faq-item{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+.faq-item-header{display:flex;align-items:center;justify-content:space-between}
+.faq-num{font-size:12px;font-weight:700;color:var(--blue)}
+.btn-faq-del{background:transparent;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:0 2px}
+.btn-faq-del:hover{color:#dc2626}
+.faq-q,.faq-a{background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;padding:8px 10px;border-radius:4px;outline:none;resize:none;width:100%;line-height:1.6}
+.faq-q::placeholder,.faq-a::placeholder{color:#a3b4c9}
+.btn-add-faq{background:transparent;border:1px dashed var(--border);color:var(--muted);font-family:'Noto Sans KR',sans-serif;font-size:13px;padding:9px;border-radius:5px;cursor:pointer;width:100%;transition:all .15s}
+.btn-add-faq:hover{border-color:var(--primary);color:var(--primary)}
+
+/* IMAGE */
+.img-upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.img-slot{background:var(--surface2);border:1px dashed var(--border);border-radius:6px;padding:10px 6px;text-align:center;cursor:pointer;transition:border-color .15s;position:relative;overflow:hidden;min-height:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.img-slot:hover{border-color:var(--primary)}
+.img-slot.has-img{border-style:solid;border-color:#a9c4ea}
+.img-slot input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.img-slot-preview{width:100%;height:50px;object-fit:cover;border-radius:3px;display:none}
+.img-slot-label{font-size:11px;color:var(--muted);line-height:1.4}
+.img-slot-num{font-size:16px;color:#9db0c9}
+.img-slot.has-img .img-slot-num{display:none}
+.img-slot.has-img .img-slot-preview{display:block}
+.img-slot.has-img .img-slot-label{font-size:11px;color:var(--muted);margin-top:2px}
+.img-slot-wrap{display:flex;flex-direction:column;gap:3px}
+.img-dl-btn{display:none;padding:4px 0;font-size:11px;background:var(--primary);color:var(--primary-text);border:none;border-radius:3px;cursor:pointer;font-weight:700;width:100%}
+.img-dl-btn:hover{background:var(--primary-dark)}
+
+/* BUTTONS */
+.btn-generate{
+  background:var(--primary);color:var(--primary-text);border:none;
+  font-family:'Noto Sans KR',sans-serif;font-size:16px;font-weight:700;
+  padding:15px;border-radius:6px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .15s;width:100%;
+}
+.btn-generate:hover{background:var(--primary-dark)}
+.btn-generate:disabled{background:#e2e8f0;color:#94a3b8;cursor:not-allowed}
+
+/* STATUS */
+.status-bar{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:11px 13px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px;min-height:42px}
+.status-bar.done{color:#15803d;border-color:#bbf0cf}
+.status-bar.error{color:#dc2626;border-color:#fbcaca}
+
+/* TIPS */
+.tip-box{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:13px 15px}
+.tip-title{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px}
+.tip-item{font-size:13px;color:var(--muted);line-height:1.7;padding-left:11px;position:relative}
+.tip-item::before{content:'·';position:absolute;left:0;color:#9db0c9}
+
+/* OUTPUT */
+.output-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.output-title{font-size:16px;font-weight:700;color:var(--text)}
+
+/* HELP BUTTON */
+.btn-help{
+  background:transparent;border:1px solid var(--border);
+  color:var(--primary);font-family:'Noto Sans KR',sans-serif;
+  font-size:13px;font-weight:700;padding:7px 13px;
+  border-radius:4px;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:5px;
+}
+.btn-help:hover{background:var(--primary-dim);border-color:var(--primary)}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(20,35,60,.55);
+  display:flex;align-items:center;justify-content:center;
+  z-index:999;opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:#ffffff;border:1px solid var(--border);
+  box-shadow:0 20px 45px rgba(30,60,110,.18);
+  border-radius:12px;padding:28px;width:420px;max-width:90vw;
+  transform:translateY(12px);transition:transform .2s;
+}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-title{font-size:17px;font-weight:700;color:var(--primary)}
+.modal-close{background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;padding:2px 6px;border-radius:4px;transition:color .15s}
+.modal-close:hover{color:var(--text)}
+.modal-step{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px}
+.modal-step:last-child{margin-bottom:0}
+.modal-step-num{background:var(--primary);color:var(--primary-text);font-size:13px;font-weight:900;min-width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.modal-step-body{flex:1}
+.modal-step-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
+.modal-step-desc{font-size:14px;color:var(--muted);line-height:1.7}
+.modal-step-desc strong{color:var(--primary)}
+.modal-divider{height:1px;background:var(--border);margin:16px 0}
+
+/* HOW TO BOX */
+.howto-box{
+  background:var(--primary-dim);border:1px solid #c7dcfb;
+  border-radius:8px;padding:16px 18px;margin-bottom:18px;
+}
+.howto-title{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:10px;letter-spacing:.3px}
+.howto-step{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.howto-step:last-child{margin-bottom:0}
+.step-num{background:var(--primary);color:var(--primary-text);font-size:11px;font-weight:900;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-text{font-size:14px;color:#3d5878;line-height:1.6}
+.step-text strong{color:var(--primary)}
+.step-text a{color:var(--primary);text-underline-offset:2px}
+
+/* PROMPT OUTPUT */
+.prompt-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow)}
+.prompt-bar{background:var(--surface2);padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.prompt-bar span{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.btn-copy{background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;padding:5px 12px;border-radius:4px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:4px}
+.btn-copy:hover{border-color:var(--primary);color:var(--primary)}
+.btn-copy.copied{border-color:var(--green);color:var(--green)}
+.prompt-area{background:#fbfdff;color:#1c2b3d;font-family:'Consolas','Courier New',monospace;font-size:16px;padding:18px;line-height:2;min-height:480px;max-height:70vh;overflow-y:auto;overflow-x:hidden;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;border:none;width:100%;resize:vertical;outline:none;display:block;box-sizing:border-box}
+
+/* CLAUDE BUTTON */
+.btn-claude{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:var(--primary-dim);border:1px solid #c7dcfb;
+  color:var(--primary-dark);font-family:'Noto Sans KR',sans-serif;
+  font-size:15px;font-weight:700;padding:14px;
+  border-radius:6px;cursor:pointer;width:100%;
+  transition:all .15s;text-decoration:none;margin-bottom:6px;
+}
+.btn-claude:hover{background:#d9e8fd;border-color:var(--primary)}
+.btn-claude-icon{font-size:18px}
+
+/* EMPTY */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:320px;color:var(--muted);gap:10px;text-align:center}
+.empty-icon{font-size:36px;opacity:.3}
+.empty-text{font-size:14px;line-height:1.7}
+
+/* API KEY */
+.apikey-wrap{position:relative}
+.apikey-wrap .form-input{padding-right:68px;font-family:monospace;font-size:14px}
+.btn-save-key{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:var(--surface3);border:1px solid var(--border);color:var(--muted);font-size:12px;font-weight:700;padding:4px 8px;border-radius:4px;cursor:pointer;transition:all .15s}
+.btn-save-key:hover{border-color:var(--primary);color:var(--text)}
+.btn-save-key.saved{border-color:var(--primary);color:var(--primary)}
+.key-status{font-size:12px;margin-top:3px}
+.key-status.ok{color:var(--green)}
+.key-status.none{color:var(--muted)}
+
+/* CHECKBOX LINK */
+.check-link-row{display:flex;align-items:center;gap:8px;padding:11px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:border-color .15s;user-select:none}
+.check-link-row:hover{border-color:var(--primary)}
+.check-link-row.checked{border-color:var(--primary);background:var(--primary-dim)}
+.check-link-row input[type=checkbox]{width:15px;height:15px;accent-color:var(--primary);cursor:pointer;flex-shrink:0}
+.check-link-label{font-size:14px;font-weight:600;color:var(--muted);flex:1;line-height:1.4}
+.check-link-row.checked .check-link-label{color:var(--primary-dark)}
+.check-link-url{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+.check-link-row.checked .check-link-url{color:var(--primary)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#c3d6f0;border-radius:3px}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <div class="top-bar-title">블로그 자동생기</div>
+      <div class="top-bar-divider"></div>
+      <div class="top-bar-sub">Claude.ai 무료 연동 버전</div>
+      <span class="badge-free">FREE</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="btn-help" onclick="openHelp()">❓ 사용방법</button>
+    </div>
+  </div>
+
+  <!-- 사용방법 모달 -->
+  <div class="modal-overlay" id="help-modal" onclick="closeHelpOutside(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">✦ 사용 방법 (3단계)</div>
+        <button class="modal-close" onclick="closeHelp()">✕</button>
+      </div>
+      <div class="modal-step">
+        <div class="modal-step-num">1</div>
+        <div class="modal-step-body">
+          <div class="modal-step-title">포스팅 제목 입력</div>
+          <div class="modal-step-desc">왼쪽 패널에서 <strong>포스팅 제목</strong>을 입력하세요.<br>나머지 항목은 비워두면 AI가 자동으로 작성합니다.</div>
+        </div>
+      </div>
+      <div class="modal-step">
+        <div class="modal-step-num">2</div>
+        <div class="modal-step-body">
+          <div class="modal-step-title">프롬프트 생성 → 복사</div>
+          <div class="modal-step-desc"><strong>프롬프트 생성</strong> 버튼 클릭 → 우측에 프롬프트가 나타나면<br><strong>복사</strong> 버튼을 클릭하세요.</div>
+        </div>
+      </div>
+      <div class="modal-step">
+        <div class="modal-step-num">3</div>
+        <div class="modal-step-body">
+          <div class="modal-step-title">Claude.ai에 붙여넣기 → 전송</div>
+          <div class="modal-step-desc"><strong>Claude.ai 열기</strong> 버튼 클릭 → 대화창에 <strong>Ctrl+V</strong> 붙여넣기 → 전송<br>생성된 HTML을 복사해서 블로그에 붙여넣으면 완성!</div>
+        </div>
+      </div>
+      <div class="modal-divider"></div>
+      <div style="font-size:12px;color:#8ea1b8;line-height:1.7">
+        💡 티스토리는 <strong style="color:#c3d3e5">HTML 편집 모드</strong>에 붙여넣기<br>
+        💡 네이버는 <strong style="color:#c3d3e5">스마트에디터 텍스트 버전</strong> 사용 권장
+      </div>
+    </div>
+  </div>
+
+  <!-- LEFT PANEL -->
+  <div class="panel-left">
+
+    <!-- SEO 설정 -->
+    <div class="section-divider"><span>SEO 설정</span></div>
+
+    <div class="form-group">
+      <label class="form-label">타겟 키워드 <span class="label-badge seo">SEO 필수</span></label>
+      <input id="inp-keyword" class="form-input" type="text" placeholder="예: 창업CEO과정, 서울 부동산실무학원, 서울 경매학원, 부동산 디벨로퍼 등">
+      <div class="char-hint">H1·제목·첫 문단에 자동 배치됩니다</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">검색 의도 <span class="label-badge seo">SEO 필수</span></label>
+      <div class="intent-group">
+        <button class="intent-btn active" data-intent="informational" onclick="setIntent(this)">정보 탐색</button>
+        <button class="intent-btn" data-intent="commercial" onclick="setIntent(this)">비교/검토</button>
+        <button class="intent-btn" data-intent="transactional" onclick="setIntent(this)">구매/신청</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">메타 디스크립션 <span class="label-badge opt">선택</span></label>
+      <textarea id="inp-metadesc" class="form-input" style="min-height:60px" placeholder="검색결과에 표시될 설명 (150~160자 권장). 비워두면 AI가 자동 생성합니다."></textarea>
+      <div class="char-hint" id="meta-char">0 / 160자</div>
+    </div>
+
+    <!-- 콘텐츠 정보 -->
+    <div class="section-divider"><span>콘텐츠 정보</span></div>
+
+    <div class="form-group">
+      <label class="form-label">포스팅 제목 <span class="label-badge req">필수</span></label>
+      <input id="inp-title" class="form-input" type="text" placeholder="예: 개업 전 부동산실무학원 수강해야하는 이유 등">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">주제와 연관된 정보성 글 <span class="label-badge auto">AI 자동</span></label>
+      <textarea id="inp-stats" class="form-input" placeholder="예: 자격증 취득 후 폐업하는 이유 등"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">정보성글에 관련된 사례 <span class="label-badge auto">AI 자동</span></label>
+      <textarea id="inp-winners" class="form-input" style="min-height:90px" placeholder="예: 준비 없이 개업 후 폐업한 사례 정리 등"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">개강 정보 <span class="label-badge auto">AI 자동</span></label>
+      <input id="inp-event" class="form-input" type="text" placeholder="예: 창업CEO OO기 OO/OO(O) 대개강 월수반, 금토반, 커뮤니티반">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">랜딩페이지 URL <span class="label-badge opt">선택</span></label>
+      <input id="inp-url" class="form-input" type="text" placeholder="https://event.eduwill.net/...">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">추가 홍보 포인트 <span class="label-badge opt">선택</span></label>
+      <textarea id="inp-extra" class="form-input" placeholder="예: 부동산아카데미 알리미 바로가기, 설명회 신청하기, 공개강의 신청하기 등"></textarea>
+    </div>
+
+    <div class="check-link-row" id="check-link-row" onclick="toggleCheckLink()">
+      <input type="checkbox" id="chk-academy" onclick="event.stopPropagation();" onchange="toggleCheckLink()">
+      <span class="check-link-label">에듀윌 부동산아카데미 바로가기 링크 삽입</span>
+      <span class="check-link-url">gnland.eduwill.net</span>
+    </div>
+
+    <!-- FAQ -->
+    <div class="section-divider"><span>FAQ (구조화 데이터)</span></div>
+    <div id="faq-list"></div>
+    <button class="btn-add-faq" onclick="addFaq()">＋ FAQ 항목 추가</button>
+
+    <!-- 이미지 -->
+    <div class="section-divider"><span>이미지 업로드</span></div>
+    <div class="img-upload-grid">
+      <div class="img-slot-wrap">
+        <div class="img-slot" id="slot-0">
+          <input type="file" accept="image/*" onchange="handleImg(0,this)">
+          <span class="img-slot-num">＋</span>
+          <img class="img-slot-preview" id="prev-0">
+          <div class="img-slot-label">①썸네일</div>
+        </div>
+        <button class="img-dl-btn" id="dl-0" onclick="downloadImg(0)">⬇ 다운로드</button>
+      </div>
+      <div class="img-slot-wrap">
+        <div class="img-slot" id="slot-1">
+          <input type="file" accept="image/*" onchange="handleImg(1,this)">
+          <span class="img-slot-num">＋</span>
+          <img class="img-slot-preview" id="prev-1">
+          <div class="img-slot-label">②정보성글 사진</div>
+        </div>
+        <button class="img-dl-btn" id="dl-1" onclick="downloadImg(1)">⬇ 다운로드</button>
+      </div>
+      <div class="img-slot-wrap">
+        <div class="img-slot" id="slot-2">
+          <input type="file" accept="image/*" onchange="handleImg(2,this)">
+          <span class="img-slot-num">＋</span>
+          <img class="img-slot-preview" id="prev-2">
+          <div class="img-slot-label">③예시글 사진</div>
+        </div>
+        <button class="img-dl-btn" id="dl-2" onclick="downloadImg(2)">⬇ 다운로드</button>
+      </div>
+      <div class="img-slot-wrap">
+        <div class="img-slot" id="slot-3">
+          <input type="file" accept="image/*" onchange="handleImg(3,this)">
+          <span class="img-slot-num">＋</span>
+          <img class="img-slot-preview" id="prev-3">
+          <div class="img-slot-label">④개강정보 사진</div>
+        </div>
+        <button class="img-dl-btn" id="dl-3" onclick="downloadImg(3)">⬇ 다운로드</button>
+      </div>
+      <div class="img-slot-wrap">
+        <div class="img-slot" id="slot-4">
+          <input type="file" accept="image/*" onchange="handleImg(4,this)">
+          <span class="img-slot-num">＋</span>
+          <img class="img-slot-preview" id="prev-4">
+          <div class="img-slot-label">⑤신청 배너</div>
+        </div>
+        <button class="img-dl-btn" id="dl-4" onclick="downloadImg(4)">⬇ 다운로드</button>
+      </div>
+      <div class="img-slot-wrap">
+        <div class="img-slot" id="slot-5">
+          <input type="file" accept="image/*" onchange="handleImg(5,this)">
+          <span class="img-slot-num">＋</span>
+          <img class="img-slot-preview" id="prev-5">
+          <div class="img-slot-label">⑥기타</div>
+        </div>
+        <button class="img-dl-btn" id="dl-5" onclick="downloadImg(5)">⬇ 다운로드</button>
+      </div>
+    </div>
+
+    <!-- 생성 버튼 -->
+    <button class="btn-generate" id="btn-gen" onclick="generate()">
+      <span id="btn-text">✦ 프롬프트 생성</span>
+    </button>
+
+    <div class="status-bar" id="status-bar">
+      <span id="status-text">입력 후 생성 버튼을 클릭하세요</span>
+    </div>
+
+    <div class="tip-box" style="border-color:#2a4266">
+      <div class="tip-item" style="color:#9db3c9;padding-left:0">⚠ 이미지 제작은 시간당 50회만 생성 가능하므로 50회 소진 시 이미지 제작이 불가할 수 있습니다.</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">사용 순서</div>
+      <div class="tip-item">포스팅 제목 입력 (나머지는 AI 자동)</div>
+      <div class="tip-item">프롬프트 생성 버튼 클릭</div>
+      <div class="tip-item">Claude.ai 열기 버튼 → 붙여넣기</div>
+      <div class="tip-item">결과 HTML을 복사해서 블로그에 붙여넣기</div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="panel-right">
+
+    <div class="output-header">
+      <div class="output-title">생성된 프롬프트</div>
+    </div>
+
+    <!-- 빈 상태 -->
+    <div id="result-empty" class="empty-state">
+      <div class="empty-icon">✦</div>
+      <div class="empty-text">포스팅 제목을 입력하고<br>프롬프트 생성 버튼을 클릭하세요<br><br>생성된 프롬프트를 Claude.ai에<br>붙여넣으면 블로그 HTML이 완성됩니다</div>
+    </div>
+
+    <!-- 결과 -->
+    <div id="result-content" style="display:none">
+
+      <!-- 사용방법 안내 -->
+      <div class="howto-box">
+        <div class="howto-title">✦ 사용 방법 — 3단계</div>
+        <div class="howto-step">
+          <div class="step-num">1</div>
+          <div class="step-text">아래 <strong>프롬프트 복사</strong> 버튼을 클릭하세요</div>
+        </div>
+        <div class="howto-step">
+          <div class="step-num">2</div>
+          <div class="step-text">아래 <strong>Claude.ai 열기</strong> 버튼을 클릭 → 대화창에 <strong>Ctrl+V</strong> 붙여넣기</div>
+        </div>
+        <div class="howto-step">
+          <div class="step-num">3</div>
+          <div class="step-text">Claude가 생성한 HTML을 복사 → 티스토리/네이버 블로그에 붙여넣기</div>
+        </div>
+      </div>
+
+      <!-- Claude.ai 열기 버튼 -->
+      <a class="btn-claude" href="https://claude.ai" target="_blank">
+        <span class="btn-claude-icon">✦</span>
+        Claude.ai 열기 (새 탭)
+      </a>
+
+      <!-- 프롬프트 출력 -->
+      <div class="prompt-wrap">
+        <div class="prompt-bar">
+          <span>생성된 프롬프트</span>
+          <button class="btn-copy" id="btn-copy-prompt" onclick="copyPrompt()">복사</button>
+        </div>
+        <textarea class="prompt-area" id="prompt-output" readonly></textarea>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+const UNSPLASH_KEY = '6KS6FWEbF0aZ6WJXfDEhldxjMRDaVoFpeKvuvBE8lNc';
+const imgData = {};
+let currentIntent = 'informational';
+let faqCount = 0;
+
+(function init() {
+  document.getElementById('inp-metadesc').addEventListener('input', function() {
+    document.getElementById('meta-char').textContent = this.value.length + ' / 160자';
+  });
+  addFaq(); addFaq(); addFaq();
+})();
+
+// ── Unsplash Auto Fetch ──
+async function fetchUnsplashImages(keyword) {
+  const unsplashKey = UNSPLASH_KEY;
+  if (!unsplashKey) return;
+  const baseQuery = keyword || '부동산';
+  const queries = [
+    baseQuery + ' real estate thumbnail',           // ① 썸네일
+    baseQuery + ' information education guide',     // ② 정보성글 사진
+    'real estate case example korea',               // ③ 예시글 사진
+    'education class seminar lecture korea',        // ④ 개강정보 사진
+    'registration apply enrollment business',       // ⑤ 신청 배너
+    baseQuery + ' background korea'                 // ⑥ 기타
+  ];
+  for (let idx = 0; idx < 6; idx++) {
+    if (imgData[idx]) continue;
+    const query = encodeURIComponent(queries[idx] || baseQuery);
+    try {
+      const res = await fetch(`https://api.unsplash.com/search/photos?query=${query}&per_page=1&orientation=landscape&client_id=${unsplashKey}`);
+      const data = await res.json();
+      const photo = data.results?.[0];
+      if (photo) {
+        imgData[idx] = photo.urls.regular;
+        const prev = document.getElementById('prev-' + idx);
+        prev.src = photo.urls.small;
+        document.getElementById('slot-' + idx).classList.add('has-img');
+        document.getElementById('dl-' + idx).style.display = 'inline-block';
+      }
+    } catch(e) { /* 개별 슬롯 실패 시 무시 */ }
+  }
+}
+
+async function downloadImg(idx) {
+  const url = imgData[idx];
+  if (!url) return;
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `image_${idx + 1}.jpg`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  } catch(e) { alert('다운로드 실패: 브라우저 보안 정책으로 직접 저장이 불가합니다.\n이미지를 우클릭 → 다른 이름으로 저장 해주세요.'); }
+}
+
+function handleImg(idx, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    imgData[idx] = e.target.result;
+    document.getElementById('prev-' + idx).src = e.target.result;
+    document.getElementById('slot-' + idx).classList.add('has-img');
+  };
+  reader.readAsDataURL(file);
+}
+
+function setIntent(btn) {
+  document.querySelectorAll('.intent-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentIntent = btn.dataset.intent;
+}
+
+function addFaq() {
+  faqCount++;
+  const n = faqCount;
+  const div = document.createElement('div');
+  div.className = 'faq-item';
+  div.id = 'faq-item-' + n;
+  div.innerHTML = `
+    <div class="faq-item-header">
+      <span class="faq-num">FAQ ${n}</span>
+      <button class="btn-faq-del" onclick="removeFaq(${n})">✕</button>
+    </div>
+    <textarea class="faq-q" id="faq-q-${n}" rows="1" placeholder="질문: 예) 부동산실무학원 수강 기간은 얼마나 되나요?"></textarea>
+    <textarea class="faq-a" id="faq-a-${n}" rows="2" placeholder="답변: 구체적인 내용을 입력하면 Featured Snippet에 유리합니다"></textarea>
+  `;
+  document.getElementById('faq-list').appendChild(div);
+}
+
+function removeFaq(n) {
+  const el = document.getElementById('faq-item-' + n);
+  if (el) el.remove();
+}
+
+function collectFaqs() {
+  const items = document.querySelectorAll('.faq-item');
+  const result = [];
+  items.forEach(item => {
+    const id = item.id.replace('faq-item-', '');
+    const q = (document.getElementById('faq-q-' + id)?.value || '').trim();
+    const a = (document.getElementById('faq-a-' + id)?.value || '').trim();
+    if (q && a) result.push({ q, a });
+  });
+  return result;
+}
+
+function setStatus(msg, type = '') {
+  const bar = document.getElementById('status-bar');
+  bar.className = 'status-bar' + (type ? ' ' + type : '');
+  bar.innerHTML = `<span>${msg}</span>`;
+}
+
+async function generate() {
+  const keyword  = document.getElementById('inp-keyword').value.trim();
+  const title    = document.getElementById('inp-title').value.trim();
+  const stats    = document.getElementById('inp-stats').value.trim();
+  const winners  = document.getElementById('inp-winners').value.trim();
+  const event    = document.getElementById('inp-event').value.trim();
+  const url      = document.getElementById('inp-url').value.trim() || '#';
+  const extra    = document.getElementById('inp-extra').value.trim();
+  const metadesc = document.getElementById('inp-metadesc').value.trim();
+  const faqs     = collectFaqs();
+
+  if (!title) {
+    setStatus('❗ 포스팅 제목은 필수 입력 항목입니다', 'error');
+    return;
+  }
+
+  // Unsplash 자동 이미지 fetch (미업로드 슬롯만)
+  setStatus('Unsplash에서 관련 이미지를 가져오는 중...', 'loading');
+  await fetchUnsplashImages(keyword || title);
+
+  const today = new Date().toISOString().split('T')[0];
+
+  const faqText = faqs.length
+    ? faqs.map((f, i) => `Q${i+1}: ${f.q}\nA${i+1}: ${f.a}`).join('\n')
+    : '(FAQ 없음 — AI가 자동으로 3개 생성)';
+
+  const intentMap = {
+    informational: '정보 탐색형 (독자가 부동산 관련 정보를 탐색 중 — 교육적이고 신뢰감 있는 톤)',
+    commercial: '비교/검토형 (독자가 학원·과정을 비교 중 — 차별점과 수치 강조)',
+    transactional: '구매/신청형 (독자가 수강 등록 직전 — 행동 촉구 CTA 강화)'
+  };
+
+  const imgLabels = ['썸네일','정보성글 사진','예시글 사진','개강정보 사진','신청 배너','기타'];
+  const imgNote = imgLabels.map((l, i) =>
+    imgData[i] ? `이미지 ${i+1}(${l}): 업로드됨 — 실제 이미지를 해당 위치에 삽입하세요` : `이미지 ${i+1}(${l}): 미업로드 — 플레이스홀더로 표시`
+  ).join('\n');
+
+  const prompt =
+`당신은 2026년 구글·네이버 SEO 전문가이자 부동산아카데미 콘텐츠 마케터입니다.
+아래 글감으로 SEO 완전 최적화된 블로그 HTML 두 버전을 생성하세요.
+
+[자동 생성 규칙]
+- (미입력) 또는 (없음)으로 표시된 항목은 포스팅 제목과 타겟 키워드를 바탕으로 AI가 직접 조사·추론하여 구체적으로 작성하세요.
+- 단순히 생략하거나 "(미입력)" 문구를 그대로 출력하지 마세요. 반드시 실제 콘텐츠로 채우세요.
+
+[글감]
+- 타겟 키워드: ${keyword || title}
+- 검색 의도: ${intentMap[currentIntent]}
+- 포스팅 제목: ${title}
+- 주제와 연관된 정보성 글: ${stats || '(미입력 — 포스팅 제목과 타겟 키워드 기반으로 AI 자동 작성)'}
+- 정보성글에 관련된 사례: ${winners || '(미입력 — 대한민국 실제 사례 기반으로 AI 자동 작성)'}
+- 개강 정보: ${event || '(미입력 — 부동산아카데미 과정명과 개강 일정을 자연스럽게 AI 자동 작성)'}
+- 랜딩페이지 URL: ${url}
+- 추가 홍보 포인트: ${extra || '(없음 — 콘텐츠 흐름에 맞게 AI 자동 추가)'}
+- 에듀윌 부동산아카데미 링크: ${document.getElementById('chk-academy').checked ? '본문 내 적절한 위치에 "에듀윌 부동산아카데미 바로가기" 링크(https://gnland.eduwill.net/sites/home)를 버튼 또는 앵커 태그로 삽입하세요.' : '(미사용)'}
+- 메타 디스크립션: ${metadesc || '(AI 자동 생성 — 타겟 키워드 포함 150자 내외)'}
+- 오늘 날짜: ${today}
+- FAQ 항목:
+${faqText}
+- 이미지 현황:
+${imgNote}
+
+[콘텐츠 작성 지침 — 전문 콘텐츠 작가 & SEO 전문가 기준]
+당신은 전문적인 콘텐츠 작가이자 SEO 전문가입니다. "${keyword || title}"에 대한 포괄적이고 정보가 풍부한 블로그 포스트를 작성하세요.
+
+■ 기본 구조 (필수 8요소)
+1. SEO에 최적화된 제목
+2. 흥미를 끄는 도입부
+3. 주요 내용을 요약한 목차
+4. 최소 3개의 소제목으로 구분된 본문 (각 소제목 아래에는 관련 정보, 통계, 예시 등을 포함)
+5. 실행 가능한 팁이나 단계별 가이드 (해당되는 경우)
+6. 결론 및 독자에게 남기는 생각할 거리
+7. 독자의 참여를 유도하는 행동 촉구문 (CTA)
+8. 메타 설명 (160자 이내)
+
+■ 글 작성 시 반드시 적용
+(1) 최신 트렌드와 연구 결과를 반영
+(2) 신뢰할 수 있는 출처의 정보만 사용
+(3) 독자의 관심을 끌 수 있는 흥미로운 사실이나 통계 포함
+(4) 스캔하기 쉬운 형식으로 구성 (짧은 단락, 불릿 포인트 등 활용)
+(5) 적절한 내부 및 외부 링크 제안
+(6) 이미지나 인포그래픽 삽입 위치 제안 (해당되는 경우)
+(7) 네이버가 생각하는 좋은 문서 기준에 맞춰 작성
+   - 신뢰성 있는 정보: 신뢰할 수 있는 정보를 기반으로 작성
+   - 솔직한 경험: 상품/서비스/장소 등에 대해 본인이 직접 경험하고 솔직하게 작성
+   - 독창적 정보: 다른 문서를 복사하거나 짜깁기하지 않고, 독자적 정보로서 가치 보유
+   - 심층적 구성: 해당 주제에 도움이 될 만한 충분한 길이의 정보와 분석 내용 포함
+   - 좋은 가독성: 글을 읽는 사용자가 쉽게 읽고 이해할 수 있게 작성
+(8) AI 시대에 사용자의 선택을 받는 콘텐츠 작성 가이드 반영
+   1) 직접 경험한 지식 — 정보 수집을 넘어 본인이 직접 겪은 구체적 사례, 문제 해결 과정, 실패했던 경험, 상세한 사용 후기 등을 생생하게 작성. 전문적인 주제는 구체적인 통계, 연구 결과, 공식 기관의 발표 자료 등을 인용해 신뢰도를 높일 것
+   2) 일관된 주제 — 특정 분야의 전문 출처로 인식될 수 있도록 부동산아카데미의 핵심 주제(부동산·중개업·창업 등)에서 벗어나지 않고 일관성 유지
+   3) 거짓 없는 진정성 — 경제적 대가(원고료, 협찬 등)나 직접 구매한 사실은 독자가 한눈에 알 수 있도록 명확히 표시. 타인의 글·기사·논문 등을 인용했다면 원작자를 밝히고 원문 링크를 삽입
+   4) 읽기 쉬운 구조 — 제목, 소제목, 문단 나누기를 적극 활용. 콘텐츠 흐름에 맞는 이미지·동영상을 활용하되, 미디어로 전달하는 핵심 내용은 반드시 텍스트로도 함께 작성
+   5) 최신성 유지 — 정보가 변경되었거나 새로운 트렌드가 등장했다면 이를 반영
+
+■ 다음은 사용자에게 외면 받을 수 있으니 주의
+1) 무분별한 복제와 생성 — 인기글을 그대로 베끼거나 확인되지 않은 사실을 짜깁기하지 말 것. 사람이 직접 쓴 문장이 아닌 AI가 기계적으로 생성·요약한 글을 무분별하게 발행하지 말 것
+2) 과도한 광고와 홍보 — 콘텐츠 본질을 흐리거나 핵심과 무관한 키워드·광고성 문구를 지나치게 넣지 말 것. 홍보만을 목적으로 외부 URL을 과도하게 삽입하지 말 것
+3) 무관한 키워드 삽입 — 오직 노출만을 목적으로 맥락과 관계 없는 키워드를 억지로 끼워 넣지 말 것
+4) 콘텐츠와 무관한 이미지·동영상 삽입 — 본문 내용과 전혀 상관없는 이미지나 동영상을 의미 없이 나열하지 말 것
+5) 부정확하고 부적절한 정보 — 사실관계가 확인되지 않은 정보를 무책임하게 작성·배포해 혼선을 주지 말 것
+
+■ 완성 후 아래 목적에 부합하는지 체크하고, 부합하지 않으면 수정
+1) 독자 및 목적 — 콘텐츠를 소비할 독자 입장에서, 그들이 어떤 상황(TPO)에서 어떤 목적으로 이 정보를 찾게 될지 고민한 뒤 작성되었는가
+2) 절차 및 구체적 해결 과정 — 시간과 절차의 흐름에 따라 상세히 풀었는가, 직접 경험한 사람만이 아는 팁·주의사항이 담겼는가, 실제 경험한 순서와 절차가 상세히 기술되었는가
+3) 대안 및 비교 분석 — 함께 고민했던 대안들과 최종 선택의 결정적 이유가 담겼는가, 대안 외 고려했던 것들과 각 장단점, 독자 상황별 최적 선택지를 제시했는가
+4) 실제 적용 사례 및 결과 — 실제 적용 결과, 사전 예상과 달랐던 점, 시행착오가 구체적으로 담겼는가, 주장을 뒷받침하는 통계·연구자료·공식문서 등 객관적 근거를 인용했는가
+5) 맥락에 맞는 이미지와 동영상 — 콘텐츠 흐름에 적합한 멀티미디어를 적극 활용하되, 이미지·영상으로 전달하려는 핵심 내용을 텍스트로도 함께 제공했는가
+
+■ AI 시대 콘텐츠 품질 비교 기준 (참고하여 수정)
+1) 독자 및 목적 — '회의 30분 전에 식사를 마쳐야 하는 직장인'처럼 독자와 상황을 분명히 정하고 그에 맞는 동선·가격·소요시간 등 실용 정보를 제공했는가 (순위만 나열한 글 지양)
+2) 절차 및 해결 과정 — 1~30일, 31~60일처럼 시간 순서대로 과정·실패·수정 사항을 구체적 수치와 함께 담았는가 (근거 없는 일반론, "무릎이 아파도 참고 뛰라"류의 위험한 조언 지양)
+3) 대안 및 비교 분석 — A·B·C를 직접 비교해 장단점을 항목별로 제시하고 '상황별 최적 선택'을 제시했는가 (누구나 쓸 수 있는 일반론 지양)
+4) 실제 적용 사례 및 결과 — 실제 사용 환경과 기간을 밝히고 직접 측정·관찰한 결과를 제시했는가 (제조사 스펙시트 복붙, 구매 링크 강조만 하는 글 지양)
+5) 맥락에 맞는 이미지와 동영상 — 표·리스트·소제목으로 핵심 정보를 빠르게 파악하도록 구조화하고, 본문과 직접 관련된 이미지를 배치했는가 (본문과 무관한 이미지 지양)
+
+■ 핵심 원칙
+지금까지의 기준을 관통하는 가장 큰 핵심은 "인간만이 담아낼 수 있는 진정성과 고유한 시선"이다. 작성 시 최대한 반영하라.
+
+■ 네이버 발표자료 FAQ (참고)
+1) AI 브리핑에 잘 인용되는 글 — 위 콘텐츠 작성 가이드를 고려해 작성하고, 직접 겪은 문제 해결 과정·상세한 후기 등 경험이 녹아있는 콘텐츠를 충분히 활용. 이미지의 핵심 정보는 텍스트로도 함께 작성
+2) 잘 인용되지 않는 글 — 반복적인 키워드 나열, 낚시성 문서, 출처 불분명한 짜깁기 글, AI가 기계적으로 생성·요약한 콘텐츠, 과도한 팝업·위장광고·지나친 홍보성 콘텐츠는 제외될 수 있음
+3) C-rank 점수 — 기존 검색 결과에 잘 노출되는 양질의 글이 AI 브리핑 요약에 사용될 가능성이 높고, 특정 주제를 꾸준히 써온 채널이 더 자주 인용됨
+4) 광고/협찬 글 — 진정성 있는 콘텐츠가 우대되며, '내돈내산'·'업체 지원' 등 경제적 이해관계를 명확히 표시할 것. 정보 없이 홍보 멘트로만 채워지면 불리
+5) 최신성 — 실시간 정보·트렌드가 중요한 주제는 최근 글이 우대되나, 시간이 지나도 변하지 않는 정보는 최신성보다 깊이와 구조적 완성도가 더 중요
+6) 기존 SEO 기준과의 차이 — 기본 원칙은 동일하나 기계적 최적화 대신 사용자 중심으로 변화, 실제 경험·지식과 가독성 높은 구조가 더 중요
+7) AI로 작성한 글 — AI 활용 자체는 페널티 대상이 아니나, 최종 검토·편집 단계에서 창작자의 실제 경험과 지식을 반드시 녹여낼 것
+8) 검색 상위 노출 글 — 사람의 경험과 생각이 담긴 유용하고 독창적인 콘텐츠일수록 검색 상위 노출과 AI 브리핑 인용 확률이 모두 높아짐
+
+마지막으로, 이 블로그 포스트가 "${keyword || title}"에 대한 권위 있는 자료로 인식될 수 있도록 깊이 있고 유익한 내용으로 구성하라. 독자들이 이 글을 읽은 후 실질적인 가치를 얻고, 해당 주제에 대해 더 잘 이해할 수 있도록 작성하라.
+
+[출력 형식]
+JSON만 반환 (마크다운 코드블록 없이):
+{"tistory":"<tistory전체HTML>","naver":"<naver전체HTML>","naver_text":"<순수텍스트>"}
+
+[티스토리 버전 스펙]
+- 완전한 HTML 문서 (<!DOCTYPE html> 포함)
+- <head>에 반드시 포함:
+  · <title>타겟 키워드 포함 제목 (50자 이내)</title>
+  · <meta name="description" content="150~160자 메타 설명">
+  · <meta name="keywords" content="타겟키워드, 관련키워드...">
+  · OG 태그 (og:title, og:description, og:type="article", og:url="${url}")
+  · <meta name="twitter:card" content="summary_large_image">
+  · <link rel="canonical" href="${url}">
+  · Schema.org JSON-LD: Article (datePublished:"${today}", author/publisher: 부동산아카데미)
+  · Schema.org JSON-LD: FAQPage
+- 디자인: 다크 네이비 배경(#0D1B2A), 빨간 강조(#D42B2B), 골드(#F0C040)
+- flex/grid 사용 가능
+- 구조: [히어로+H1] → [TOC] → [H2 정보성글] → [H2 사례] → [H2 시스템] → [H2 FAQ] → [H2 개강+CTA]
+- 이미지 위치에 <!-- IMG_PLACEHOLDER_1 --> ~ <!-- IMG_PLACEHOLDER_5 --> 삽입
+
+[네이버 버전 스펙]
+- 완전한 HTML 문서
+- <head>에 Schema.org JSON-LD (Article + FAQPage) 포함
+- 흰 배경, table 기반 레이아웃(flex/grid 금지), 모든 스타일 인라인
+- <style> 블록 금지, 최대 폭 860px, 줄간격 1.8, 본문 16px
+- 동일 SEO 구조 유지
+- 이미지 위치에 <!-- IMG_PLACEHOLDER_1 --> ~ <!-- IMG_PLACEHOLDER_5 --> 삽입
+
+[naver_text 버전 스펙 — 네이버 스마트에디터 텍스트 붙여넣기용]
+- HTML 태그 완전 금지 (순수 텍스트)
+- ★ 제목, ▶ H2 소제목, ■ H3, • 리스트, Q:/A: FAQ
+- 이미지 위치: [이미지 삽입: 설명] 형태
+- CTA: [ 신청하기 → URL ] 형태`;
+
+  document.getElementById('prompt-output').value = prompt;
+  document.getElementById('result-empty').style.display = 'none';
+  document.getElementById('result-content').style.display = 'block';
+  setStatus('✓ 프롬프트 생성 완료! 복사 후 Claude.ai에 붙여넣으세요', 'done');
+}
+
+function openHelp() {
+  document.getElementById('help-modal').classList.add('open');
+}
+function closeHelp() {
+  document.getElementById('help-modal').classList.remove('open');
+}
+function closeHelpOutside(e) {
+  if (e.target === document.getElementById('help-modal')) closeHelp();
+}
+
+// ── Check Link Toggle ──
+function toggleCheckLink() {
+  const chk = document.getElementById('chk-academy');
+  const row = document.getElementById('check-link-row');
+  chk.checked = !chk.checked;
+  row.classList.toggle('checked', chk.checked);
+}
+
+function copyPrompt() {
+  const area = document.getElementById('prompt-output');
+  navigator.clipboard.writeText(area.value).then(() => {
+    const btn = document.getElementById('btn-copy-prompt');
+    btn.textContent = '✓ 복사됨';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
