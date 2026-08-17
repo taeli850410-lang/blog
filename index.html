@@ -485,21 +485,6 @@ textarea.form-input{min-height:82px;line-height:1.75}
     <div class="section-divider"><span>콘텐츠 정보</span></div>
 
     <div class="form-group">
-      <label class="form-label">주제와 연관된 정보성 글 <span class="label-badge auto">AI 자동</span></label>
-      <textarea id="inp-stats" class="form-input" placeholder="예: 자격증 취득 후 폐업하는 이유 등"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">정보성글에 관련된 사례 <span class="label-badge auto">AI 자동</span></label>
-      <textarea id="inp-winners" class="form-input" style="min-height:90px" placeholder="예: 준비 없이 개업 후 폐업한 사례 정리 등"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">개강 정보 <span class="label-badge auto">AI 자동</span></label>
-      <input id="inp-event" class="form-input" type="text" placeholder="예: 창업CEO OO기 OO/OO(O) 대개강 월수반, 금토반, 커뮤니티반">
-    </div>
-
-    <div class="form-group">
       <label class="form-label">랜딩페이지 URL <span class="label-badge opt">선택</span></label>
       <input id="inp-url" class="form-input" type="text" placeholder="https://event.eduwill.net/...">
     </div>
@@ -1676,9 +1661,6 @@ async function generate() {
 
   if (currentContentType === 'naver' || currentContentType === 'tistory') {
     const keyword  = document.getElementById('inp-keyword').value.trim();
-    const stats    = document.getElementById('inp-stats').value.trim();
-    const winners  = document.getElementById('inp-winners').value.trim();
-    const event    = document.getElementById('inp-event').value.trim();
     const url      = document.getElementById('inp-url').value.trim() || '#';
     const extra    = document.getElementById('inp-extra').value.trim();
     const metadesc = document.getElementById('inp-metadesc').value.trim();
@@ -1707,9 +1689,7 @@ async function generate() {
 - 타겟 키워드: ${topic}
 - 검색 의도: ${intentMap[currentIntent]}
 - 포스팅 제목: ${title}
-- 주제와 연관된 정보성 글: ${stats || '(미입력 — 포스팅 제목과 타겟 키워드 기반으로 AI 자동 작성)'}
-- 정보성글에 관련된 사례: ${winners || '(미입력 — 대한민국 실제 사례 기반으로 AI 자동 작성)'}
-- 개강 정보: ${event || '(미입력 — 부동산아카데미 과정명과 개강 일정을 자연스럽게 AI 자동 작성)'}
+- 본문 정보·사례: (AI 자동 작성 — 포스팅 제목과 타겟 키워드를 바탕으로 핵심 정보와 대한민국 실제 사례를 직접 조사·구성)
 - 랜딩페이지 URL: ${url}
 - 추가 홍보 포인트: ${extra || '(없음 — 콘텐츠 흐름에 맞게 AI 자동 추가)'}
 - 메타 디스크립션: ${metadesc || '(AI 자동 생성 — 타겟 키워드 포함 150자 내외)'}
