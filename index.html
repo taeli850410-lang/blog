@@ -405,7 +405,7 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
     </div>
 
     <div class="check-link-row" id="check-link-row" onclick="toggleCheckLink()">
-      <input type="checkbox" id="chk-academy" onclick="event.stopPropagation();" onchange="toggleCheckLink()">
+      <input type="checkbox" id="chk-academy" onclick="event.stopPropagation();" onchange="syncCheckLink()">
       <span class="check-link-label">에듀윌 부동산아카데미 바로가기 링크 삽입</span>
       <span class="check-link-url">gnland.eduwill.net</span>
     </div>
@@ -1215,11 +1215,17 @@ function closeHelpOutside(e) {
 }
 
 // ── Check Link Toggle ──
+// 행 클릭 → 상태를 직접 뒤집는다
 function toggleCheckLink() {
   const chk = document.getElementById('chk-academy');
-  const row = document.getElementById('check-link-row');
   chk.checked = !chk.checked;
-  row.classList.toggle('checked', chk.checked);
+  syncCheckLink();
+}
+
+// 체크박스 자체 변경 → 브라우저가 이미 상태를 바꿨으므로 화면만 맞춘다
+function syncCheckLink() {
+  const chk = document.getElementById('chk-academy');
+  document.getElementById('check-link-row').classList.toggle('checked', chk.checked);
 }
 
 function copyPrompt() {
