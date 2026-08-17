@@ -97,18 +97,6 @@ textarea.form-input{min-height:82px;line-height:1.75}
 .intent-btn.active{background:var(--primary-dim);border-color:var(--primary-str);color:#bfdbfe;box-shadow:0 0 0 1px rgba(59,130,246,.3)}
 .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 
-/* FAQ */
-.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:11px;display:flex;flex-direction:column;gap:7px;margin-bottom:7px}
-.faq-item-header{display:flex;align-items:center;justify-content:space-between}
-.faq-num{font-size:11px;font-weight:800;color:var(--primary);letter-spacing:.5px}
-.btn-faq-del{background:transparent;border:none;color:var(--dim);font-size:14px;cursor:pointer;padding:0 3px;transition:color .15s}
-.btn-faq-del:hover{color:var(--red)}
-.faq-q,.faq-a{background:var(--bg);border:1px solid var(--border-soft);color:var(--text);font-family:inherit;font-size:14px;padding:9px 11px;border-radius:9px;outline:none;resize:none;width:100%;line-height:1.65}
-.faq-q:focus,.faq-a:focus{border-color:var(--primary-str)}
-.faq-q::placeholder,.faq-a::placeholder{color:var(--dim)}
-.btn-add-faq{background:transparent;border:1px dashed var(--border);color:var(--muted);font-family:inherit;font-size:13px;padding:11px;border-radius:var(--r);cursor:pointer;width:100%;transition:all .15s}
-.btn-add-faq:hover{border-color:var(--primary-str);color:var(--primary);background:var(--primary-dim)}
-
 /* IMAGE SLOTS */
 .img-upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .img-slot{background:var(--surface);border:1px dashed var(--border);border-radius:var(--r);padding:11px 7px;text-align:center;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
@@ -521,11 +509,6 @@ textarea.form-input{min-height:82px;line-height:1.75}
       <textarea id="inp-extra" class="form-input" placeholder="예: 부동산아카데미 알리미 바로가기, 설명회 신청하기, 공개강의 신청하기 등"></textarea>
     </div>
 
-    <!-- FAQ -->
-    <div class="section-divider"><span>FAQ (구조화 데이터)</span></div>
-    <div id="faq-list"></div>
-    <button class="btn-add-faq" onclick="addFaq()">＋ FAQ 항목 추가</button>
-
     <!-- 이미지 -->
     <div class="section-divider"><span>이미지 업로드</span></div>
     <div class="img-upload-grid">
@@ -818,7 +801,6 @@ textarea.form-input{min-height:82px;line-height:1.75}
 const UNSPLASH_KEY = '6KS6FWEbF0aZ6WJXfDEhldxjMRDaVoFpeKvuvBE8lNc';
 const imgData = {};
 let currentIntent = 'informational';
-let faqCount = 0;
 let currentContentType = 'naver';
 let outputFormat = 'html';
 
@@ -1373,7 +1355,6 @@ document.addEventListener('keydown', e => {
   document.getElementById('inp-metadesc').addEventListener('input', function() {
     document.getElementById('meta-char').textContent = this.value.length + ' / 160자';
   });
-  addFaq(); addFaq(); addFaq();
   renderTypeHint();
 })();
 
@@ -1438,40 +1419,6 @@ function setIntent(btn) {
   document.querySelectorAll('.intent-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   currentIntent = btn.dataset.intent;
-}
-
-function addFaq() {
-  faqCount++;
-  const n = faqCount;
-  const div = document.createElement('div');
-  div.className = 'faq-item';
-  div.id = 'faq-item-' + n;
-  div.innerHTML = `
-    <div class="faq-item-header">
-      <span class="faq-num">FAQ ${n}</span>
-      <button class="btn-faq-del" onclick="removeFaq(${n})">✕</button>
-    </div>
-    <textarea class="faq-q" id="faq-q-${n}" rows="1" placeholder="질문: 예) 부동산실무학원 수강 기간은 얼마나 되나요?"></textarea>
-    <textarea class="faq-a" id="faq-a-${n}" rows="2" placeholder="답변: 구체적인 내용을 입력하면 Featured Snippet에 유리합니다"></textarea>
-  `;
-  document.getElementById('faq-list').appendChild(div);
-}
-
-function removeFaq(n) {
-  const el = document.getElementById('faq-item-' + n);
-  if (el) el.remove();
-}
-
-function collectFaqs() {
-  const items = document.querySelectorAll('.faq-item');
-  const result = [];
-  items.forEach(item => {
-    const id = item.id.replace('faq-item-', '');
-    const q = (document.getElementById('faq-q-' + id)?.value || '').trim();
-    const a = (document.getElementById('faq-a-' + id)?.value || '').trim();
-    if (q && a) result.push({ q, a });
-  });
-  return result;
 }
 
 function setStatus(msg, type = '') {
@@ -1735,15 +1682,10 @@ async function generate() {
     const url      = document.getElementById('inp-url').value.trim() || '#';
     const extra    = document.getElementById('inp-extra').value.trim();
     const metadesc = document.getElementById('inp-metadesc').value.trim();
-    const faqs     = collectFaqs();
     const topic    = keyword || title;
 
     setStatus('Unsplash에서 관련 이미지를 가져오는 중...', 'loading');
     await fetchUnsplashImages(topic);
-
-    const faqText = faqs.length
-      ? faqs.map((f, i) => `Q${i+1}: ${f.q}\nA${i+1}: ${f.a}`).join('\n')
-      : '(FAQ 없음 — AI가 자동으로 3개 생성)';
 
     const intentMap = {
       informational: '정보 탐색형 (독자가 부동산 관련 정보를 탐색 중 — 교육적이고 신뢰감 있는 톤)',
@@ -1772,8 +1714,7 @@ async function generate() {
 - 추가 홍보 포인트: ${extra || '(없음 — 콘텐츠 흐름에 맞게 AI 자동 추가)'}
 - 메타 디스크립션: ${metadesc || '(AI 자동 생성 — 타겟 키워드 포함 150자 내외)'}
 - 오늘 날짜: ${today}
-- FAQ 항목:
-${faqText}
+- FAQ 항목: (AI 자동 생성 — 실제 검색어 형태의 질문과 구체적인 답변으로 구성)
 - 이미지 현황:
 ${imgNote}`;
 
