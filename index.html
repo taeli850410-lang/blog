@@ -236,6 +236,75 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
 /* CONTENT TYPE GRID */
 .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 
+/* IMAGE GEN — left panel */
+.imggen-toggle{display:flex;align-items:center;gap:9px;padding:12px 13px;background:linear-gradient(135deg,#eef4fc,#f4f0fe);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;user-select:none}
+.imggen-toggle:hover{border-color:var(--primary)}
+.imggen-toggle.checked{border-color:#7c53d9;background:linear-gradient(135deg,#e9f0fe,#f0e9fd);box-shadow:0 1px 3px rgba(90,60,160,.1)}
+.imggen-toggle input[type=checkbox]{width:15px;height:15px;accent-color:#7c53d9;cursor:pointer;flex-shrink:0}
+.imggen-toggle-label{font-size:14px;font-weight:700;color:var(--muted);flex:1;line-height:1.4}
+.imggen-toggle.checked .imggen-toggle-label{color:#5b34ad}
+.imggen-body{display:none;flex-direction:column;gap:13px;padding:15px;background:var(--surface2);border:1px solid var(--border);border-left:3px solid #7c53d9;border-radius:8px}
+.imggen-body.open{display:flex}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.opt-btn{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:9px 10px;cursor:pointer;transition:all .15s;text-align:left;font-family:'Noto Sans KR',sans-serif;display:flex;flex-direction:column;gap:2px}
+.opt-btn-title{font-size:13px;font-weight:700;color:var(--text)}
+.opt-btn-desc{font-size:11px;color:var(--muted);line-height:1.4}
+.opt-btn:hover{border-color:#7c53d9}
+.opt-btn.active{background:#f4f0fe;border-color:#7c53d9}
+.opt-btn.active .opt-btn-title{color:#5b34ad}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap}
+.preset-chip{background:var(--surface);border:1px solid #d9cbfa;color:#6d3fd1;font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;padding:6px 11px;border-radius:20px;cursor:pointer;transition:all .15s}
+.preset-chip:hover{background:#f4f0fe;border-color:#7c53d9}
+.btn-imggen{
+  background:linear-gradient(135deg,#5b34ad,#3B7DEB);color:#fff;border:none;
+  font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;
+  padding:14px;border-radius:8px;cursor:pointer;width:100%;
+  display:flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s;
+}
+.btn-imggen:hover{filter:brightness(1.08)}
+.btn-imggen:disabled{background:#e2e8f0;color:#94a3b8;cursor:not-allowed;filter:none}
+.keyhint{font-size:12px;color:var(--muted);line-height:1.6}
+.keyhint a{color:var(--primary);font-weight:700}
+
+/* IMAGE GEN — result canvas */
+.result-tabs{display:flex;gap:6px;margin-bottom:14px}
+.result-tab{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:700;padding:11px 8px;border-radius:6px;cursor:pointer;transition:all .15s;text-align:center}
+.result-tab:hover{border-color:var(--primary)}
+.result-tab.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.canvas-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.canvas-badges{display:flex;gap:5px;flex-wrap:wrap}
+.cbadge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;border:1px solid}
+.cbadge.ratio{background:#e6f7fb;color:#0e7490;border-color:#a5e4f0}
+.cbadge.mood{background:#f4f0fe;color:#6d3fd1;border-color:#d9cbfa}
+.cbadge.tone{background:#fff7ec;color:#b4700a;border-color:#f3d9ad}
+.canvas-view-btns{display:flex;gap:5px}
+.view-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;padding:5px 11px;border-radius:5px;cursor:pointer;transition:all .15s}
+.view-btn:hover{border-color:var(--primary)}
+.view-btn.active{background:var(--primary-dim);border-color:var(--primary);color:var(--primary-dark)}
+.shot-grid{display:grid;gap:12px}
+.shot-grid.grid2{grid-template-columns:1fr 1fr}
+.shot-grid.stack{grid-template-columns:1fr}
+.shot{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.shot-head{background:var(--surface2);padding:9px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:6px}
+.shot-title{font-size:13px;font-weight:700;color:var(--text)}
+.shot-time{font-size:11px;color:var(--muted)}
+.shot-img{width:100%;display:block;background:#f1f5fb;cursor:zoom-in;object-fit:contain}
+.shot-foot{padding:9px 12px;display:flex;gap:6px;border-top:1px solid var(--border)}
+.shot-foot button{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;padding:7px 4px;border-radius:5px;cursor:pointer;transition:all .15s}
+.shot-foot button:hover{border-color:var(--primary);color:var(--primary)}
+.shot-foot button.copied{border-color:var(--green);color:var(--green)}
+.imgloading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:56px 20px;background:var(--surface);border:1px dashed #d9cbfa;border-radius:10px;color:#6d3fd1}
+.spinner{width:30px;height:30px;border:3px solid #e6dbfb;border-top-color:#7c53d9;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.imgerr{background:#fef2f2;border:1px solid #fbcaca;color:#b91c1c;border-radius:8px;padding:13px 15px;font-size:13px;line-height:1.7}
+
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;background:rgba(15,25,45,.88);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s;padding:28px}
+.lightbox.open{opacity:1;pointer-events:all}
+.lightbox img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lightbox-close{position:absolute;top:18px;right:22px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:15px;font-weight:700;padding:8px 15px;border-radius:6px;cursor:pointer}
+.lightbox-close:hover{background:rgba(255,255,255,.25)}
+
 /* OUTPUT FORMAT */
 .format-box{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:14px 15px;display:flex;flex-direction:column;gap:12px}
 .format-row{display:flex;flex-direction:column;gap:6px}
@@ -516,8 +585,79 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
       <span id="status-text">입력 후 생성 버튼을 클릭하세요</span>
     </div>
 
-    <div class="tip-box" style="border-color:#2a4266">
-      <div class="tip-item" style="color:#9db3c9;padding-left:0">⚠ 이미지 제작은 시간당 50회만 생성 가능하므로 50회 소진 시 이미지 제작이 불가할 수 있습니다.</div>
+    <!-- 이미지 생성 -->
+    <div class="section-divider"><span>이미지 생성</span></div>
+    <div class="imggen-toggle" id="imggen-toggle" onclick="toggleImgGen()">
+      <input type="checkbox" id="chk-imggen" onclick="event.stopPropagation();" onchange="syncImgGen()">
+      <span class="imggen-toggle-label">🎨 홍보 이미지 직접 생성하기</span>
+    </div>
+
+    <div class="imggen-body" id="imggen-body">
+
+      <div class="form-group">
+        <label class="form-label">Gemini API 키 <span class="label-badge req">필수</span></label>
+        <div class="apikey-wrap">
+          <input id="inp-apikey" class="form-input" type="password" placeholder="AIza..." autocomplete="off" spellcheck="false">
+          <button class="btn-save-key" id="btn-save-key" onclick="saveApiKey()">저장</button>
+        </div>
+        <div class="key-status none" id="key-status">저장된 키 없음</div>
+        <div class="keyhint">
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">Google AI Studio</a>에서 무료로 발급받을 수 있습니다.
+          키는 <strong>이 브라우저에만 저장</strong>되며 Google API로만 전송됩니다.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">프리셋 조합 <span class="label-badge auto">인기 추천</span></label>
+        <div class="preset-row" id="preset-row"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">채널별 포맷 / 비율</label>
+        <div class="opt-grid" id="opt-ratio"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">분위기 / 연출 스타일</label>
+        <div class="opt-grid" id="opt-mood"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">컬러 톤앤매너</label>
+        <div class="opt-grid" id="opt-tone"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">조명 상태</label>
+        <div class="opt-grid" id="opt-light"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">시즌 / 테마 기획</label>
+        <div class="opt-grid" id="opt-season"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">추가 연출 디테일 <span class="label-badge opt">선택</span></label>
+        <textarea id="inp-imgdetail" class="form-input" style="min-height:62px" placeholder="예: 책상 위에 계약서와 도장, 창밖으로 아파트 단지가 보이는 구도"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">시안 개수</label>
+        <div class="opt-grid" id="opt-count"></div>
+      </div>
+
+      <button class="btn-imggen" id="btn-imggen" onclick="generateImages()">
+        <span id="imggen-btn-text">🎨 홍보 이미지 생성</span>
+      </button>
+
+      <div class="status-bar" id="img-status">
+        <span>옵션을 선택하고 생성 버튼을 클릭하세요</span>
+      </div>
+    </div>
+
+    <div class="tip-box" style="border-color:#f3d9ad;background:#fff7ec">
+      <div class="tip-item" style="color:#7a5218;padding-left:0">⚠ 무료 API 키는 분당·일일 호출 한도가 있습니다. 한도 초과 시 15~30초 후 다시 시도하세요.</div>
     </div>
 
     <div class="tip-box">
@@ -534,13 +674,19 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
   <div class="panel-right">
 
     <div class="output-header">
-      <div class="output-title">📄 생성된 프롬프트</div>
+      <div class="output-title" id="output-title">📄 생성된 프롬프트</div>
+    </div>
+
+    <!-- 결과 탭 -->
+    <div class="result-tabs" id="result-tabs" style="display:none">
+      <button class="result-tab active" id="tab-prompt" onclick="setResultTab('prompt')">📄 글 프롬프트</button>
+      <button class="result-tab" id="tab-canvas" onclick="setResultTab('canvas')">🎨 결과물 캔버스</button>
     </div>
 
     <!-- 빈 상태 -->
     <div id="result-empty" class="empty-state">
       <div class="empty-icon">✦</div>
-      <div class="empty-text">포스팅 제목을 입력하고<br>프롬프트 생성 버튼을 클릭하세요<br><br>생성된 프롬프트를 Claude.ai에<br>붙여넣으면 블로그 HTML이 완성됩니다</div>
+      <div class="empty-text">포스팅 제목을 입력하고<br>프롬프트 생성 버튼을 클릭하세요<br><br>이미지 생성을 켜면 홍보 이미지도<br>이 화면에서 바로 만들 수 있습니다</div>
     </div>
 
     <!-- 결과 -->
@@ -583,7 +729,25 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
 
     </div>
 
+    <!-- 이미지 결과 캔버스 -->
+    <div id="canvas-content" style="display:none">
+      <div class="canvas-bar">
+        <div class="canvas-badges" id="canvas-badges"></div>
+        <div class="canvas-view-btns">
+          <button class="view-btn active" id="view-grid" onclick="setCanvasView('grid2')">나란히 비교</button>
+          <button class="view-btn" id="view-stack" onclick="setCanvasView('stack')">세로 스택</button>
+        </div>
+      </div>
+      <div id="canvas-area"></div>
+    </div>
+
   </div>
+</div>
+
+<!-- 이미지 확대 보기 -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕ 닫기 (ESC)</button>
+  <img id="lightbox-img" alt="확대 이미지">
 </div>
 
 <script>
@@ -609,6 +773,374 @@ function setOutputFormat(fmt) {
   document.getElementById('fmt-what-article').classList.toggle('active', fmt === 'article');
   document.getElementById('fmt-what-html').classList.toggle('active', fmt === 'html');
 }
+
+/* ══════════════ 이미지 생성 ══════════════ */
+
+// 시크릿 모드·저장소 차단 환경에서도 앱이 죽지 않도록 감싼다
+const safeStorage = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } },
+  remove(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+
+const IMG_OPTS = {
+  ratio: [
+    { v: '16:9', t: '블로그 / 웹 썸네일', d: '웹사이트 메인 배너 및 유튜브 썸네일용' },
+    { v: '1:1',  t: '인스타그램 피드',    d: '스마트스토어 메인 대표 이미지 최적화' },
+    { v: '4:5',  t: '모바일 커머스 상세', d: '모바일 화면 점유율이 높은 세로 비율' },
+    { v: '9:16', t: '릴스 / 쇼츠 / 스토리', d: '모바일 몰입감을 극대화하는 세로 풀스크린' },
+    { v: '4:3',  t: '본문 삽입 이미지',   d: '블로그 본문 중간에 넣기 좋은 표준 비율' },
+    { v: '3:4',  t: '카탈로그 / 룩북',    d: '잡지형 세로컷 구도' }
+  ],
+  mood: [
+    { v: '모던 스튜디오 컷',    d: '세련된 오브제와 현대적인 쇼룸 배경' },
+    { v: '신뢰감 있는 전문가',  d: '단정한 사무 공간, 상담 장면의 안정된 구도' },
+    { v: '고급스러운 럭셔리',   d: '대리석, 벨벳, 골드 텍스처의 프리미엄 연출' },
+    { v: '미니멀 & 여백의 미',  d: '넓은 여백과 단일 피사체 중심 구성' },
+    { v: '따뜻한 감성 홈라이프', d: '원목, 패브릭, 감성 카페 테이블 무드' },
+    { v: '인포그래픽 도표형',   d: '도형과 화살표로 정보 구조를 보여주는 구성' }
+  ],
+  tone: [
+    { v: '신뢰의 블루 & 화이트', d: '차분한 남색과 흰 여백의 전문적인 톤' },
+    { v: '골드 & 딥 블랙',      d: '프리미엄 묵직함과 황금빛 하이라이트' },
+    { v: '부드러운 파스텔 톤',   d: '피치, 민트, 연보라 등 편안하고 화사한 톤' },
+    { v: '어스 톤 (Earth Tone)', d: '베이지, 테라코타, 올리브 내추럴 무드' },
+    { v: '비비드 & 화려함',     d: '생동감 넘치는 원색 중심의 시선 집중 컬러' },
+    { v: '세련된 모노톤 / 흑백', d: '명암 표현에 집중한 도시적인 무채색' }
+  ],
+  light: [
+    { v: '자연광 (Natural Daylight)', d: '창을 통해 들어오는 부드러운 주광' },
+    { v: '스튜디오 스포트라이트',      d: '피사체에 집중되는 전문 화보 조명' },
+    { v: '따뜻한 림라이트 (Warm Rim)', d: '윤곽을 감싸는 따뜻한 역광' },
+    { v: '은은한 간접 조명',           d: '매끄럽고 은은한 그림자의 하이엔드 광원' }
+  ],
+  season: [
+    { v: '상시 (Standard)',   d: '시즌색 없이 언제든 쓸 수 있는 기본 연출' },
+    { v: '봄 & 벚꽃 시즌',    d: '흩날리는 벚꽃잎, 연분홍 톤과 봄의 화사함' },
+    { v: '여름 휴가 & 썸머',  d: '푸른 하늘과 시원한 채광의 청량한 무드' },
+    { v: '가을 감성 & 단풍',  d: '따뜻한 주황·갈색 계열의 차분한 계절감' },
+    { v: '크리스마스 & 연말', d: '트리, 눈 결정, 따뜻한 조명과 선물 상자' },
+    { v: '신학기 / 개강 시즌', d: '노트와 책, 새로 시작하는 분위기의 정돈된 구성' }
+  ],
+  count: [
+    { v: '1', t: '1종 생성', d: '가장 빠르게 한 장만' },
+    { v: '2', t: '✌️ 2종 시안 비교', d: '서로 다른 구도 2장을 비교' }
+  ]
+};
+
+const IMG_PRESETS = [
+  { label: '📘 블로그 썸네일 표준', ratio: '16:9', mood: '신뢰감 있는 전문가', tone: '신뢰의 블루 & 화이트', light: '자연광 (Natural Daylight)', season: '상시 (Standard)', detail: '중앙에 핵심 피사체를 두고 상단에 여백을 남긴 안정적인 구도' },
+  { label: '💎 프리미엄 강조',     ratio: '1:1',  mood: '고급스러운 럭셔리',   tone: '골드 & 딥 블랙',        light: '따뜻한 림라이트 (Warm Rim)', season: '상시 (Standard)', detail: '매끄러운 검은 단상 위에 위풍당당하게 놓인 구도' },
+  { label: '🌿 편안한 감성',       ratio: '4:5',  mood: '따뜻한 감성 홈라이프', tone: '부드러운 파스텔 톤',     light: '자연광 (Natural Daylight)', season: '봄 & 벚꽃 시즌',   detail: '원목 테이블과 화분, 맑은 햇살 그림자' },
+  { label: '📊 정보 전달형',       ratio: '4:3',  mood: '인포그래픽 도표형',   tone: '세련된 모노톤 / 흑백',   light: '은은한 간접 조명',          season: '상시 (Standard)', detail: '단계별 흐름을 보여주는 3단 구조의 도형 배치' }
+];
+
+const imgSel = { ratio: '16:9', mood: '신뢰감 있는 전문가', tone: '신뢰의 블루 & 화이트', light: '자연광 (Natural Daylight)', season: '상시 (Standard)', count: '2' };
+let imgResults = [];
+let canvasView = 'grid2';
+
+function toggleImgGen() {
+  const chk = document.getElementById('chk-imggen');
+  chk.checked = !chk.checked;
+  syncImgGen();
+}
+
+function syncImgGen() {
+  const chk = document.getElementById('chk-imggen');
+  document.getElementById('imggen-toggle').classList.toggle('checked', chk.checked);
+  document.getElementById('imggen-body').classList.toggle('open', chk.checked);
+  if (chk.checked) buildImgOptionUI();
+}
+
+let imgUIBuilt = false;
+function buildImgOptionUI() {
+  if (imgUIBuilt) return;
+  imgUIBuilt = true;
+
+  const render = (containerId, key, items) => {
+    document.getElementById(containerId).innerHTML = items.map(o => {
+      // 비율만 "이름 · 16:9"처럼 값을 덧붙인다 (개수 등은 이름만)
+      const title = key === 'ratio' ? `${o.t} · ${o.v}` : (o.t || o.v);
+      const active = imgSel[key] === o.v ? ' active' : '';
+      return `<button type="button" class="opt-btn${active}" data-key="${key}" data-val="${escapeHtml(o.v)}" onclick="pickImgOpt(this)">
+        <span class="opt-btn-title">${escapeHtml(title)}</span>
+        <span class="opt-btn-desc">${escapeHtml(o.d)}</span>
+      </button>`;
+    }).join('');
+  };
+
+  render('opt-ratio', 'ratio', IMG_OPTS.ratio);
+  render('opt-mood', 'mood', IMG_OPTS.mood);
+  render('opt-tone', 'tone', IMG_OPTS.tone);
+  render('opt-light', 'light', IMG_OPTS.light);
+  render('opt-season', 'season', IMG_OPTS.season);
+  render('opt-count', 'count', IMG_OPTS.count);
+
+  document.getElementById('preset-row').innerHTML = IMG_PRESETS.map((p, i) =>
+    `<button type="button" class="preset-chip" onclick="applyPreset(${i})">${escapeHtml(p.label)}</button>`
+  ).join('');
+
+  const saved = safeStorage.get('gemini_api_key');
+  if (saved) {
+    document.getElementById('inp-apikey').value = saved;
+    setKeyStatus(true);
+  }
+}
+
+function pickImgOpt(btn) {
+  const key = btn.dataset.key, val = btn.dataset.val;
+  imgSel[key] = val;
+  btn.parentElement.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function applyPreset(i) {
+  const p = IMG_PRESETS[i];
+  imgSel.ratio = p.ratio; imgSel.mood = p.mood; imgSel.tone = p.tone;
+  imgSel.light = p.light; imgSel.season = p.season;
+  document.getElementById('inp-imgdetail').value = p.detail;
+  [['opt-ratio','ratio'],['opt-mood','mood'],['opt-tone','tone'],['opt-light','light'],['opt-season','season']].forEach(([id,key]) => {
+    document.querySelectorAll('#' + id + ' .opt-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.val === imgSel[key])
+    );
+  });
+  setImgStatus('프리셋이 적용되었습니다 — 생성 버튼을 눌러주세요');
+}
+
+function setKeyStatus(ok) {
+  const el = document.getElementById('key-status');
+  el.className = 'key-status ' + (ok ? 'ok' : 'none');
+  el.textContent = ok ? '✓ 이 브라우저에 키가 저장되었습니다' : '저장된 키 없음';
+}
+
+function saveApiKey() {
+  const key = document.getElementById('inp-apikey').value.trim();
+  const btn = document.getElementById('btn-save-key');
+  if (!key) {
+    safeStorage.remove('gemini_api_key');
+    setKeyStatus(false);
+    return;
+  }
+  const ok = safeStorage.set('gemini_api_key', key);
+  if (!ok) {
+    const el = document.getElementById('key-status');
+    el.className = 'key-status none';
+    el.textContent = '이 브라우저에서는 저장할 수 없습니다 (시크릿 모드 등) — 이번 세션에만 사용됩니다';
+    return;
+  }
+  setKeyStatus(true);
+  btn.textContent = '✓';
+  btn.classList.add('saved');
+  setTimeout(() => { btn.textContent = '저장'; btn.classList.remove('saved'); }, 1500);
+}
+
+function setImgStatus(msg, type = '') {
+  const bar = document.getElementById('img-status');
+  bar.className = 'status-bar' + (type ? ' ' + type : '');
+  bar.innerHTML = `<span>${escapeHtml(msg)}</span>`;
+}
+
+function setResultTab(tab) {
+  document.getElementById('tab-prompt').classList.toggle('active', tab === 'prompt');
+  document.getElementById('tab-canvas').classList.toggle('active', tab === 'canvas');
+  document.getElementById('result-content').style.display = tab === 'prompt' ? '' : 'none';
+  document.getElementById('canvas-content').style.display = tab === 'canvas' ? '' : 'none';
+  document.getElementById('output-title').textContent = tab === 'prompt' ? '📄 생성된 프롬프트' : '🎨 결과물 캔버스';
+}
+
+function setCanvasView(v) {
+  canvasView = v;
+  document.getElementById('view-grid').classList.toggle('active', v === 'grid2');
+  document.getElementById('view-stack').classList.toggle('active', v === 'stack');
+  renderCanvas();
+}
+
+// 영문 이미지 프롬프트 조립 — 시안별로 구도를 달리한다
+const VARIANTS = [
+  { title: '시안 A · 정면 중심 구도', en: 'centered hero composition, subject facing forward, generous headroom for headline text' },
+  { title: '시안 B · 대각선 감성 구도', en: 'dynamic three-quarter angle, off-center subject with depth layers in background' }
+];
+
+function buildImgPrompt(topic, variantIdx) {
+  const detail = document.getElementById('inp-imgdetail').value.trim();
+  const v = VARIANTS[variantIdx] || VARIANTS[0];
+  return [
+    `Create a high-quality Korean marketing image for a blog post about "${topic}".`,
+    `Composition: ${v.en}.`,
+    `Mood and staging: ${imgSel.mood}.`,
+    `Color tone and manner: ${imgSel.tone}.`,
+    `Lighting: ${imgSel.light}.`,
+    `Seasonal theme: ${imgSel.season}.`,
+    detail ? `Additional art direction: ${detail}.` : '',
+    `Context: Korean audience, Korean real-estate and education setting. Any people, signage, or props must look natural in a Korean context.`,
+    `Absolutely no text, letters, numbers, watermarks, or logos anywhere in the image.`,
+    `Do not include real company logos, recognizable real people, or copyrighted characters.`,
+    `Award-winning commercial photography quality, sharp focus, clean and uncluttered, 8k detail.`
+  ].filter(Boolean).join(' ');
+}
+
+async function generateImages() {
+  const title = document.getElementById('inp-title').value.trim();
+  if (!title) {
+    setImgStatus('❗ 먼저 제목/주제를 입력해주세요', 'error');
+    return;
+  }
+
+  const apiKey = document.getElementById('inp-apikey').value.trim();
+  if (!apiKey) {
+    setImgStatus('❗ Gemini API 키를 입력해주세요', 'error');
+    return;
+  }
+
+  const topic = (currentContentType === 'naver' || currentContentType === 'tistory')
+    ? (document.getElementById('inp-keyword').value.trim() || title)
+    : title;
+
+  const count = parseInt(imgSel.count, 10);
+  const btn = document.getElementById('btn-imggen');
+  btn.disabled = true;
+  document.getElementById('imggen-btn-text').textContent = `홍보 이미지 ${count}종 생성 중...`;
+
+  // 결과 영역을 로딩 상태로 전환
+  imgResults = [];
+  document.getElementById('result-tabs').style.display = '';
+  document.getElementById('result-empty').style.display = 'none';
+  setResultTab('canvas');
+  renderCanvasBadges();
+  document.getElementById('canvas-area').innerHTML =
+    `<div class="imgloading"><div class="spinner"></div><div>홍보 이미지 ${count}종 생성 중입니다…<br>보통 10~30초 정도 걸립니다</div></div>`;
+
+  const MODELS = ['gemini-3.1-flash-lite-image', 'gemini-3.1-flash-image'];
+
+  try {
+    for (let i = 0; i < count; i++) {
+      if (i > 0) await new Promise(r => setTimeout(r, 1500));
+
+      setImgStatus(`${i + 1}/${count}번째 시안 생성 중...`);
+      const prompt = buildImgPrompt(topic, i);
+      let imgUrl = null, lastErr = null;
+
+      for (const model of MODELS) {
+        try {
+          const res = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { imageConfig: { aspectRatio: imgSel.ratio } }
+              })
+            }
+          );
+          const data = await res.json();
+          if (data.error) throw new Error(data.error.message || 'Gemini API 오류');
+
+          for (const part of data.candidates?.[0]?.content?.parts || []) {
+            if (part.inlineData?.data) {
+              imgUrl = `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
+              break;
+            }
+          }
+          if (imgUrl) break;
+        } catch (e) { lastErr = e; }
+      }
+
+      if (!imgUrl) throw new Error(lastErr?.message || '이미지를 생성하지 못했습니다.');
+
+      imgResults.push({
+        title: (VARIANTS[i] || VARIANTS[0]).title,
+        url: imgUrl,
+        prompt,
+        at: new Date().toLocaleTimeString('ko-KR')
+      });
+      renderCanvas();
+    }
+    setImgStatus(`✓ ${count}종 생성 완료! 우측 캔버스에서 확인하세요`, 'done');
+  } catch (err) {
+    let msg = err.message || '알 수 없는 오류가 발생했습니다.';
+    if (/429|quota|RESOURCE_EXHAUSTED/i.test(msg)) {
+      msg = 'API 사용량 한도에 도달했습니다. 약 15~30초 후 다시 시도하거나 API 키를 확인해주세요.';
+    } else if (/API_KEY|API key|PERMISSION_DENIED|invalid/i.test(msg)) {
+      msg = 'API 키가 올바르지 않습니다. Google AI Studio에서 키를 다시 확인해주세요.';
+    }
+    setImgStatus('❗ ' + msg, 'error');
+    if (!imgResults.length) {
+      document.getElementById('canvas-area').innerHTML = `<div class="imgerr"><strong>이미지 생성 실패</strong><br>${escapeHtml(msg)}</div>`;
+    } else {
+      renderCanvas();
+    }
+  } finally {
+    btn.disabled = false;
+    document.getElementById('imggen-btn-text').textContent = '🎨 홍보 이미지 생성';
+  }
+}
+
+function renderCanvasBadges() {
+  document.getElementById('canvas-badges').innerHTML = `
+    <span class="cbadge ratio">📐 ${escapeHtml(imgSel.ratio)}</span>
+    <span class="cbadge mood">🎬 ${escapeHtml(imgSel.mood)}</span>
+    <span class="cbadge tone">🎨 ${escapeHtml(imgSel.tone)}</span>`;
+}
+
+function renderCanvas() {
+  renderCanvasBadges();
+  const area = document.getElementById('canvas-area');
+  if (!imgResults.length) return;
+  const cls = imgResults.length > 1 ? canvasView : 'stack';
+  area.innerHTML = `<div class="shot-grid ${cls}">` + imgResults.map((r, i) => `
+    <div class="shot">
+      <div class="shot-head">
+        <span class="shot-title">${escapeHtml(r.title)}</span>
+        <span class="shot-time">${escapeHtml(r.at)}</span>
+      </div>
+      <img class="shot-img" src="${r.url}" alt="${escapeHtml(r.title)}" onclick="openLightbox(${i})">
+      <div class="shot-foot">
+        <button onclick="openLightbox(${i})">🔍 확대</button>
+        <button onclick="downloadShot(${i})">⬇ PNG 저장</button>
+        <button id="shot-copy-${i}" onclick="copyShotPrompt(${i})">영문 프롬프트</button>
+      </div>
+    </div>`).join('') + '</div>';
+}
+
+function downloadShot(i) {
+  const r = imgResults[i];
+  if (!r) return;
+  const a = document.createElement('a');
+  a.href = r.url;
+  a.download = `promo_image_${i + 1}.png`;
+  a.click();
+}
+
+function copyShotPrompt(i) {
+  const r = imgResults[i];
+  if (!r) return;
+  navigator.clipboard.writeText(r.prompt).then(() => {
+    const btn = document.getElementById('shot-copy-' + i);
+    btn.textContent = '✓ 복사됨';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '영문 프롬프트'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function openLightbox(i) {
+  const r = imgResults[i];
+  if (!r) return;
+  document.getElementById('lightbox-img').src = r.url;
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox(e) {
+  if (e && e.target && e.target.tagName === 'IMG') return;
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('lightbox').classList.remove('open');
+    closeHelp();
+  }
+});
 
 (function init() {
   document.getElementById('inp-metadesc').addEventListener('input', function() {
@@ -1162,7 +1694,11 @@ JSON만 반환 (마크다운 코드블록 없이):
   document.getElementById('prompt-output').value = prompt;
   renderSummaryChips();
   document.getElementById('result-empty').style.display = 'none';
-  document.getElementById('result-content').style.display = 'block';
+
+  const imgOn = document.getElementById('chk-imggen').checked;
+  document.getElementById('result-tabs').style.display = (imgOn || imgResults.length) ? '' : 'none';
+  setResultTab('prompt');
+
   setStatus('✓ 프롬프트 생성 완료! 복사 후 Claude.ai에 붙여넣으세요', 'done');
 }
 
