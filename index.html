@@ -256,14 +256,6 @@ textarea.form-input{min-height:82px;line-height:1.75}
 .key-status.none{color:var(--dim)}
 
 /* CHECKBOX ROWS */
-.check-link-row{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all .15s;user-select:none}
-.check-link-row:hover{background:var(--surface-h);border-color:rgba(59,130,246,.5)}
-.check-link-row.checked{border-color:var(--primary-str);background:var(--primary-dim)}
-.check-link-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--primary-str);cursor:pointer;flex-shrink:0}
-.check-link-label{font-size:14px;font-weight:600;color:var(--body);flex:1;line-height:1.45}
-.check-link-row.checked .check-link-label{color:#bfdbfe}
-.check-link-url{font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
-.check-link-row.checked .check-link-url{color:var(--primary)}
 
 /* OPTION CARD (헤더 띠 + 본문) */
 .opt-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow)}
@@ -527,12 +519,6 @@ textarea.form-input{min-height:82px;line-height:1.75}
     <div class="form-group">
       <label class="form-label">추가 홍보 포인트 <span class="label-badge opt">선택</span></label>
       <textarea id="inp-extra" class="form-input" placeholder="예: 부동산아카데미 알리미 바로가기, 설명회 신청하기, 공개강의 신청하기 등"></textarea>
-    </div>
-
-    <div class="check-link-row" id="check-link-row" onclick="toggleCheckLink()">
-      <input type="checkbox" id="chk-academy" onclick="event.stopPropagation();" onchange="syncCheckLink()">
-      <span class="check-link-label">에듀윌 부동산아카데미 바로가기 링크 삽입</span>
-      <span class="check-link-url">gnland.eduwill.net</span>
     </div>
 
     <!-- FAQ -->
@@ -1784,7 +1770,6 @@ async function generate() {
 - 개강 정보: ${event || '(미입력 — 부동산아카데미 과정명과 개강 일정을 자연스럽게 AI 자동 작성)'}
 - 랜딩페이지 URL: ${url}
 - 추가 홍보 포인트: ${extra || '(없음 — 콘텐츠 흐름에 맞게 AI 자동 추가)'}
-- 에듀윌 부동산아카데미 링크: ${document.getElementById('chk-academy').checked ? '본문 내 적절한 위치에 "에듀윌 부동산아카데미 바로가기" 링크(https://gnland.eduwill.net/sites/home)를 버튼 또는 앵커 태그로 삽입하세요.' : '(미사용)'}
 - 메타 디스크립션: ${metadesc || '(AI 자동 생성 — 타겟 키워드 포함 150자 내외)'}
 - 오늘 날짜: ${today}
 - FAQ 항목:
@@ -2034,20 +2019,6 @@ function closeHelp() {
 }
 function closeHelpOutside(e) {
   if (e.target === document.getElementById('help-modal')) closeHelp();
-}
-
-// ── Check Link Toggle ──
-// 행 클릭 → 상태를 직접 뒤집는다
-function toggleCheckLink() {
-  const chk = document.getElementById('chk-academy');
-  chk.checked = !chk.checked;
-  syncCheckLink();
-}
-
-// 체크박스 자체 변경 → 브라우저가 이미 상태를 바꿨으므로 화면만 맞춘다
-function syncCheckLink() {
-  const chk = document.getElementById('chk-academy');
-  document.getElementById('check-link-row').classList.toggle('checked', chk.checked);
 }
 
 function copyPrompt() {
