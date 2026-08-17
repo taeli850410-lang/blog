@@ -127,8 +127,25 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
 .tip-item::before{content:'·';position:absolute;left:0;color:#9db0c9}
 
 /* OUTPUT */
-.output-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.output-title{font-size:16px;font-weight:700;color:var(--text)}
+.output-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;
+  background:var(--primary);color:#fff;padding:14px 18px;border-radius:8px;box-shadow:var(--shadow);
+}
+.output-title{font-size:15px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
+
+/* SUMMARY CHIPS */
+.summary-chips{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.summary-chip{
+  display:flex;align-items:center;gap:10px;
+  background:#ecfdf3;border:1px solid #b7f0cd;border-radius:8px;
+  padding:10px 14px;font-size:13px;color:#15803d;
+}
+.summary-chip-num{
+  background:#16a34a;color:#fff;font-size:11px;font-weight:900;
+  width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.summary-chip-label{font-weight:700;color:#166534}
+.summary-chip-value{color:#15803d;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* HELP BUTTON */
 .btn-help{
@@ -169,16 +186,16 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
 
 /* HOW TO BOX */
 .howto-box{
-  background:var(--primary-dim);border:1px solid #c7dcfb;
+  background:#fff7ec;border:1px solid #f3d9ad;
   border-radius:8px;padding:16px 18px;margin-bottom:18px;
 }
-.howto-title{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:10px;letter-spacing:.3px}
+.howto-title{font-size:14px;font-weight:700;color:#c2790a;margin-bottom:10px;letter-spacing:.3px}
 .howto-step{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
 .howto-step:last-child{margin-bottom:0}
-.step-num{background:var(--primary);color:var(--primary-text);font-size:11px;font-weight:900;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.step-text{font-size:14px;color:#3d5878;line-height:1.6}
-.step-text strong{color:var(--primary)}
-.step-text a{color:var(--primary);text-underline-offset:2px}
+.step-num{background:#e08a1e;color:#fff;font-size:11px;font-weight:900;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-text{font-size:14px;color:#7a5218;line-height:1.6}
+.step-text strong{color:#c2790a}
+.step-text a{color:#c2790a;text-underline-offset:2px}
 
 /* PROMPT OUTPUT */
 .prompt-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow)}
@@ -192,13 +209,13 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
 /* CLAUDE BUTTON */
 .btn-claude{
   display:flex;align-items:center;justify-content:center;gap:10px;
-  background:var(--primary-dim);border:1px solid #c7dcfb;
-  color:var(--primary-dark);font-family:'Noto Sans KR',sans-serif;
+  background:#f2eefc;border:1px solid #d9cbfa;
+  color:#6d3fd1;font-family:'Noto Sans KR',sans-serif;
   font-size:15px;font-weight:700;padding:14px;
   border-radius:6px;cursor:pointer;width:100%;
   transition:all .15s;text-decoration:none;margin-bottom:6px;
 }
-.btn-claude:hover{background:#d9e8fd;border-color:var(--primary)}
+.btn-claude:hover{background:#e6dbfb;border-color:#6d3fd1}
 .btn-claude-icon{font-size:18px}
 
 /* EMPTY */
@@ -517,7 +534,7 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
   <div class="panel-right">
 
     <div class="output-header">
-      <div class="output-title">생성된 프롬프트</div>
+      <div class="output-title">📄 생성된 프롬프트</div>
     </div>
 
     <!-- 빈 상태 -->
@@ -528,6 +545,9 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
 
     <!-- 결과 -->
     <div id="result-content" style="display:none">
+
+      <!-- 입력값 요약 배지 -->
+      <div class="summary-chips" id="summary-chips"></div>
 
       <!-- 사용방법 안내 -->
       <div class="howto-box">
@@ -1140,9 +1160,48 @@ JSON만 반환 (마크다운 코드블록 없이):
   }
 
   document.getElementById('prompt-output').value = prompt;
+  renderSummaryChips();
   document.getElementById('result-empty').style.display = 'none';
   document.getElementById('result-content').style.display = 'block';
   setStatus('✓ 프롬프트 생성 완료! 복사 후 Claude.ai에 붙여넣으세요', 'done');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderSummaryChips() {
+  const title = document.getElementById('inp-title').value.trim();
+  const container = document.getElementById('summary-chips');
+  let chips;
+
+  if (currentContentType === 'naver' || currentContentType === 'tistory') {
+    const keyword = document.getElementById('inp-keyword').value.trim();
+    const intentLabels = { informational: '정보 탐색', commercial: '비교/검토', transactional: '구매/신청' };
+    chips = [
+      { label: '포스팅 제목', value: title || '(미입력)' },
+      { label: '타겟 키워드', value: keyword || title || '(미입력)' },
+      { label: '검색 의도', value: intentLabels[currentIntent] || '정보 탐색' }
+    ];
+  } else {
+    const audience = document.getElementById('inp-audience').value.trim();
+    const length = document.getElementById('inp-length').value.trim();
+    chips = [
+      { label: '주제', value: title || '(미입력)' },
+      { label: '타깃 독자', value: audience || '(미지정)' },
+      { label: '분량', value: length || '(유형별 권장 분량)' }
+    ];
+  }
+
+  container.innerHTML = chips.map((c, i) => `
+    <div class="summary-chip">
+      <span class="summary-chip-num">${i + 1}</span>
+      <span class="summary-chip-label">${escapeHtml(c.label)}</span>
+      <span class="summary-chip-value">${escapeHtml(c.value)}</span>
+    </div>
+  `).join('');
 }
 
 function openHelp() {
