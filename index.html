@@ -234,8 +234,6 @@ textarea.form-input{min-height:82px;line-height:1.75}
 .empty-text{font-size:14px;line-height:1.8}
 
 /* API KEY */
-.apikey-wrap{position:relative}
-.apikey-wrap .form-input{padding-right:72px;font-family:ui-monospace,Consolas,monospace;font-size:14px;width:100%}
 .btn-save-key{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:var(--surface3);border:1px solid var(--border);color:var(--body);font-size:12px;font-weight:700;padding:6px 11px;border-radius:8px;cursor:pointer;transition:all .15s;font-family:inherit}
 .btn-save-key:hover{border-color:var(--primary-str);color:var(--primary)}
 .btn-save-key.saved{border-color:rgba(52,211,153,.5);color:var(--green)}
@@ -313,22 +311,6 @@ textarea.form-input{min-height:82px;line-height:1.75}
 .cbadge.ratio{background:rgba(6,182,212,.15);color:var(--cyan);border-color:rgba(6,182,212,.3)}
 .cbadge.mood{background:rgba(79,70,229,.18);color:#a5b4fc;border-color:rgba(79,70,229,.4)}
 .cbadge.tone{background:rgba(252,211,77,.13);color:var(--amber);border-color:rgba(252,211,77,.3)}
-.canvas-view-btns{display:flex;gap:6px}
-.view-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:inherit;font-size:12px;font-weight:700;padding:7px 13px;border-radius:8px;cursor:pointer;transition:all .15s}
-.view-btn:hover{border-color:var(--primary-str);color:var(--primary)}
-.view-btn.active{background:var(--primary-dim);border-color:var(--primary-str);color:#bfdbfe}
-.shot-grid{display:grid;gap:14px}
-.shot-grid.grid2{grid-template-columns:1fr 1fr}
-.shot-grid.stack{grid-template-columns:1fr}
-.shot{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-lg);display:flex;flex-direction:column}
-.shot-head{background:rgba(28,44,76,.6);padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:7px}
-.shot-title{font-size:13px;font-weight:700;color:var(--text)}
-.shot-time{font-size:11px;color:var(--dim)}
-.shot-img{width:100%;display:block;background:var(--bg);cursor:zoom-in;object-fit:contain}
-.shot-foot{padding:11px 14px;display:flex;gap:7px;border-top:1px solid var(--border)}
-.shot-foot button{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--body);font-family:inherit;font-size:12px;font-weight:700;padding:8px 4px;border-radius:8px;cursor:pointer;transition:all .15s}
-.shot-foot button:hover{border-color:var(--primary-str);color:var(--primary);background:var(--surface-h)}
-.shot-foot button.copied{border-color:rgba(52,211,153,.5);color:var(--green)}
 .imgloading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;padding:64px 20px;background:var(--surface);border:1px dashed rgba(99,102,241,.45);border-radius:var(--r-lg);color:#a5b4fc;text-align:center;line-height:1.75;font-size:14px}
 .spinner{width:32px;height:32px;border:3px solid rgba(99,102,241,.22);border-top-color:#6366f1;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -360,13 +342,6 @@ textarea.form-input{min-height:82px;line-height:1.75}
 .mode-badge{font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;border:1px solid;margin-left:5px}
 .mode-badge.free{background:rgba(52,211,153,.14);color:var(--green);border-color:rgba(52,211,153,.3)}
 .mode-badge.key{background:rgba(252,211,77,.13);color:var(--amber);border-color:rgba(252,211,77,.3)}
-
-/* LIGHTBOX */
-.lightbox{position:fixed;inset:0;background:rgba(5,10,22,.93);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s;padding:32px}
-.lightbox.open{opacity:1;pointer-events:all}
-.lightbox img{max-width:100%;max-height:100%;border-radius:var(--r-lg);box-shadow:0 24px 70px rgba(0,0,0,.7)}
-.lightbox-close{position:absolute;top:20px;right:24px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px;font-weight:700;padding:9px 16px;border-radius:var(--r);cursor:pointer;transition:all .15s}
-.lightbox-close:hover{background:var(--surface-h);border-color:var(--primary-str)}
 
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:9px;height:9px}
@@ -590,40 +565,8 @@ textarea.form-input{min-height:82px;line-height:1.75}
           </div>
         </div>
       </div>
-      <div class="format-row">
-        <span class="format-row-label">어떻게 만들까요</span>
-        <div class="format-btn-group">
-          <div class="format-btn active" id="fmt-how-prompt" onclick="setOutputHow('prompt')">
-            <span class="format-btn-title">프롬프트 복사</span>
-            <span class="format-btn-sub">무료 · Claude.ai에 붙여넣기</span>
-          </div>
-          <div class="format-btn" id="fmt-how-auto" onclick="setOutputHow('auto')">
-            <span class="format-btn-title">자동 생성</span>
-            <span class="format-btn-sub">Gemini 무료 키로 바로 완성</span>
-          </div>
-        </div>
-      </div>
       </div><!-- /opt-card-body -->
     </div><!-- /opt-card -->
-
-    <!-- Gemini API 키 (자동 생성 / 실제 이미지 생성에 필요) -->
-    <div class="opt-card" id="apikey-card" style="display:none">
-      <div class="opt-card-head">🔑 Gemini API 키</div>
-      <div class="opt-card-body">
-        <div class="form-group">
-          <div class="apikey-wrap">
-            <input id="inp-apikey" class="form-input" type="password" placeholder="AIza..." autocomplete="off" spellcheck="false">
-            <button class="btn-save-key" id="btn-save-key" onclick="saveApiKey()">저장</button>
-          </div>
-          <div class="key-status none" id="key-status">저장된 키 없음</div>
-          <div class="keyhint">
-            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">Google AI Studio</a>에서
-            <strong>무료로</strong> 발급받을 수 있습니다(분당·일일 한도 있음).
-            키는 <strong>이 브라우저에만 저장</strong>되며 Google API로만 전송됩니다.
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- 생성 버튼 -->
     <button class="btn-generate" id="btn-gen" onclick="generate()">
@@ -642,20 +585,6 @@ textarea.form-input{min-height:82px;line-height:1.75}
     </div>
 
     <div class="imggen-body" id="imggen-body">
-
-      <div class="form-group">
-        <label class="form-label">이미지를 어떻게 만들까요</label>
-        <div class="format-btn-group">
-          <div class="format-btn active" id="imgmode-prompt" onclick="setImgMode('prompt')">
-            <span class="format-btn-title">프롬프트만</span>
-            <span class="format-btn-sub">무료 · 아무 이미지 AI에 붙여넣기</span>
-          </div>
-          <div class="format-btn" id="imgmode-real" onclick="setImgMode('real')">
-            <span class="format-btn-title">실제 이미지</span>
-            <span class="format-btn-sub">Gemini 무료 키로 직접 생성</span>
-          </div>
-        </div>
-      </div>
 
       <div class="form-group">
         <label class="form-label">프리셋 조합 <span class="label-badge auto">인기 추천</span></label>
@@ -697,7 +626,7 @@ textarea.form-input{min-height:82px;line-height:1.75}
         <div class="opt-grid" id="opt-count"></div>
       </div>
 
-      <button class="btn-imggen" id="btn-imggen" onclick="runImageAction()">
+      <button class="btn-imggen" id="btn-imggen" onclick="generateImagePromptsOnly()">
         <span id="imggen-btn-text">🎨 이미지 프롬프트 생성</span>
       </button>
 
@@ -707,7 +636,7 @@ textarea.form-input{min-height:82px;line-height:1.75}
     </div>
 
     <div class="tip-box" style="border-color:rgba(252,211,77,.3);background:rgba(252,211,77,.08)">
-      <div class="tip-item" style="color:var(--amber);padding-left:0">⚠ 무료 API 키는 분당·일일 호출 한도가 있습니다. 한도 초과 시 15~30초 후 다시 시도하세요.</div>
+      <div class="tip-item" style="color:var(--amber);padding-left:0">💡 생성된 이미지 프롬프트는 Claude·ChatGPT·Gemini 등 이미지 생성이 되는 AI에 그대로 붙여넣어 쓰세요.</div>
     </div>
 
     <div class="tip-box">
@@ -777,33 +706,12 @@ textarea.form-input{min-height:82px;line-height:1.75}
         <textarea class="prompt-area" id="prompt-output" readonly></textarea>
       </div>
 
-      <!-- 이 프롬프트로 글 생성 -->
-      <button class="btn-write" id="btn-write" onclick="writeArticle()">
-        <span id="write-btn-text">✍️ 이 프롬프트로 글 생성 (1,500~2,000자)</span>
-      </button>
-
-      <div class="status-bar" id="write-status" style="margin-bottom:14px">
-        <span>버튼을 누르면 위 프롬프트로 완성된 글을 만들어 아래에 보여줍니다</span>
-      </div>
-
-      <div class="prompt-wrap" id="article-wrap" style="display:none">
-        <div class="prompt-bar">
-          <span>완성된 글 <span id="article-count" class="mode-badge free"></span></span>
-          <button class="btn-copy" id="btn-copy-article" onclick="copyArticle()">복사</button>
-        </div>
-        <textarea class="prompt-area" id="article-output" readonly></textarea>
-      </div>
-
     </div>
 
     <!-- 이미지 결과 캔버스 -->
     <div id="canvas-content" style="display:none">
       <div class="canvas-bar">
         <div class="canvas-badges" id="canvas-badges"></div>
-        <div class="canvas-view-btns">
-          <button class="view-btn active" id="view-grid" onclick="setCanvasView('grid2')">나란히 비교</button>
-          <button class="view-btn" id="view-stack" onclick="setCanvasView('stack')">세로 스택</button>
-        </div>
       </div>
       <div id="canvas-area"></div>
     </div>
@@ -811,11 +719,6 @@ textarea.form-input{min-height:82px;line-height:1.75}
   </div>
 </div>
 
-<!-- 이미지 확대 보기 -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-  <button class="lightbox-close" onclick="closeLightbox()">✕ 닫기 (ESC)</button>
-  <img id="lightbox-img" alt="확대 이미지">
-</div>
 
 <script>
 const UNSPLASH_KEY = '6KS6FWEbF0aZ6WJXfDEhldxjMRDaVoFpeKvuvBE8lNc';
@@ -861,91 +764,7 @@ function setOutputFormat(fmt) {
   document.getElementById('fmt-what-html').classList.toggle('active', fmt === 'html');
 }
 
-/* ── 무료(프롬프트) / 무료키(자동 생성) 모드 ── */
-let outputHow = 'prompt';   // 'prompt' | 'auto'
-let imgMode = 'prompt';     // 'prompt' | 'real'
-
-function setOutputHow(how) {
-  outputHow = how;
-  document.getElementById('fmt-how-prompt').classList.toggle('active', how === 'prompt');
-  document.getElementById('fmt-how-auto').classList.toggle('active', how === 'auto');
-  document.getElementById('btn-text').textContent = how === 'auto' ? '✦ 글 자동 생성' : '✦ 프롬프트 생성';
-  updateKeyCard();
-}
-
-function setImgMode(mode) {
-  imgMode = mode;
-  document.getElementById('imgmode-prompt').classList.toggle('active', mode === 'prompt');
-  document.getElementById('imgmode-real').classList.toggle('active', mode === 'real');
-  document.getElementById('imggen-btn-text').textContent =
-    mode === 'real' ? '🎨 홍보 이미지 생성' : '🎨 이미지 프롬프트 생성';
-  updateKeyCard();
-}
-
-// 키가 필요한 모드가 하나라도 선택되면 키 카드를 보여준다
-function updateKeyCard() {
-  const imgOn = document.getElementById('chk-imggen').checked;
-  const need = outputHow === 'auto' || (imgOn && imgMode === 'real');
-  document.getElementById('apikey-card').style.display = need ? '' : 'none';
-  if (need) loadSavedKey();
-}
-
-let keyLoaded = false;
-function loadSavedKey() {
-  if (keyLoaded) return;
-  keyLoaded = true;
-  const saved = safeStorage.get('gemini_api_key');
-  if (saved) {
-    document.getElementById('inp-apikey').value = saved;
-    setKeyStatus(true);
-  }
-}
-
-function requireKey(statusFn) {
-  const key = document.getElementById('inp-apikey').value.trim();
-  if (!key) {
-    statusFn('❗ Gemini API 키를 입력해주세요 (무료 발급 가능)', 'error');
-    return null;
-  }
-  return key;
-}
-
-// Gemini 호출 공통 — 모델 폴백 및 한도/키 오류를 사람이 읽을 수 있는 문구로 바꾼다
-async function callGemini(models, apiKey, body) {
-  let lastErr = null;
-  for (const model of models) {
-    try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
-        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
-      );
-      const data = await res.json();
-      if (data.error) throw new Error(data.error.message || 'Gemini API 오류');
-      return data;
-    } catch (e) { lastErr = e; }
-  }
-  throw lastErr || new Error('요청이 실패했습니다.');
-}
-
-function humanizeApiError(err) {
-  let msg = err?.message || '알 수 없는 오류가 발생했습니다.';
-  if (/429|quota|RESOURCE_EXHAUSTED/i.test(msg)) {
-    return 'API 무료 한도에 도달했습니다. 약 15~30초 후 다시 시도해주세요.';
-  }
-  if (/API_?KEY|API key|PERMISSION_DENIED|invalid|UNAUTHENTICATED/i.test(msg)) {
-    return 'API 키가 올바르지 않습니다. Google AI Studio에서 키를 다시 확인해주세요.';
-  }
-  return msg;
-}
-
 /* ══════════════ 이미지 생성 ══════════════ */
-
-// 시크릿 모드·저장소 차단 환경에서도 앱이 죽지 않도록 감싼다
-const safeStorage = {
-  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
-  set(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } },
-  remove(k) { try { localStorage.removeItem(k); } catch (e) {} }
-};
 
 const IMG_OPTS = {
   ratio: [
@@ -1000,8 +819,6 @@ const IMG_PRESETS = [
 ];
 
 const imgSel = { ratio: '16:9', mood: '신뢰감 있는 전문가', tone: '신뢰의 블루 & 화이트', light: '자연광 (Natural Daylight)', season: '상시 (Standard)', count: '2' };
-let imgResults = [];
-let canvasView = 'grid2';
 
 function toggleImgGen() {
   const chk = document.getElementById('chk-imggen');
@@ -1014,7 +831,6 @@ function syncImgGen() {
   document.getElementById('imggen-toggle').classList.toggle('checked', chk.checked);
   document.getElementById('imggen-body').classList.toggle('open', chk.checked);
   if (chk.checked) buildImgOptionUI();
-  updateKeyCard();
 }
 
 let imgUIBuilt = false;
@@ -1066,33 +882,6 @@ function applyPreset(i) {
   setImgStatus('프리셋이 적용되었습니다 — 생성 버튼을 눌러주세요');
 }
 
-function setKeyStatus(ok) {
-  const el = document.getElementById('key-status');
-  el.className = 'key-status ' + (ok ? 'ok' : 'none');
-  el.textContent = ok ? '✓ 이 브라우저에 키가 저장되었습니다' : '저장된 키 없음';
-}
-
-function saveApiKey() {
-  const key = document.getElementById('inp-apikey').value.trim();
-  const btn = document.getElementById('btn-save-key');
-  if (!key) {
-    safeStorage.remove('gemini_api_key');
-    setKeyStatus(false);
-    return;
-  }
-  const ok = safeStorage.set('gemini_api_key', key);
-  if (!ok) {
-    const el = document.getElementById('key-status');
-    el.className = 'key-status none';
-    el.textContent = '이 브라우저에서는 저장할 수 없습니다 (시크릿 모드 등) — 이번 세션에만 사용됩니다';
-    return;
-  }
-  setKeyStatus(true);
-  btn.textContent = '✓';
-  btn.classList.add('saved');
-  setTimeout(() => { btn.textContent = '저장'; btn.classList.remove('saved'); }, 1500);
-}
-
 function setImgStatus(msg, type = '') {
   const bar = document.getElementById('img-status');
   bar.className = 'status-bar' + (type ? ' ' + type : '');
@@ -1105,13 +894,6 @@ function setResultTab(tab) {
   document.getElementById('result-content').style.display = tab === 'prompt' ? '' : 'none';
   document.getElementById('canvas-content').style.display = tab === 'canvas' ? '' : 'none';
   document.getElementById('output-title').textContent = tab === 'prompt' ? '📄 생성된 프롬프트' : '🎨 결과물 캔버스';
-}
-
-function setCanvasView(v) {
-  canvasView = v;
-  document.getElementById('view-grid').classList.toggle('active', v === 'grid2');
-  document.getElementById('view-stack').classList.toggle('active', v === 'stack');
-  renderCanvas();
 }
 
 // 영문 이미지 프롬프트 조립 — 시안별로 구도를 달리한다
@@ -1210,11 +992,6 @@ function copyImgPromptCard(i) {
   });
 }
 
-// 이미지 버튼 하나가 모드에 따라 갈라진다
-function runImageAction() {
-  return imgMode === 'real' ? generateImages() : generateImagePromptsOnly();
-}
-
 function generateImagePromptsOnly() {
   const title = document.getElementById('inp-title').value.trim();
   if (!title) {
@@ -1225,7 +1002,6 @@ function generateImagePromptsOnly() {
     ? (document.getElementById('inp-keyword').value.trim() || title)
     : title;
 
-  imgResults = [];
   const prompts = buildImagePrompts(topic);
   document.getElementById('result-tabs').style.display = '';
   document.getElementById('result-empty').style.display = 'none';
@@ -1235,80 +1011,6 @@ function generateImagePromptsOnly() {
   setImgStatus(`✓ 이미지 프롬프트 ${prompts.length}개 생성 완료 — 카드별로 복사해 이미지 AI에 붙여넣으세요`, 'done');
 }
 
-async function generateImages() {
-  const title = document.getElementById('inp-title').value.trim();
-  if (!title) {
-    setImgStatus('❗ 먼저 제목/주제를 입력해주세요', 'error');
-    return;
-  }
-
-  const apiKey = requireKey(setImgStatus);
-  if (!apiKey) return;
-
-  const topic = (currentContentType === 'naver' || currentContentType === 'tistory')
-    ? (document.getElementById('inp-keyword').value.trim() || title)
-    : title;
-
-  const count = parseInt(imgSel.count, 10);
-  const btn = document.getElementById('btn-imggen');
-  btn.disabled = true;
-  document.getElementById('imggen-btn-text').textContent = `홍보 이미지 ${count}종 생성 중...`;
-
-  // 결과 영역을 로딩 상태로 전환
-  imgResults = [];
-  document.getElementById('result-tabs').style.display = '';
-  document.getElementById('result-empty').style.display = 'none';
-  setResultTab('canvas');
-  renderCanvasBadges();
-  document.getElementById('canvas-area').innerHTML =
-    `<div class="imgloading"><div class="spinner"></div><div>홍보 이미지 ${count}종 생성 중입니다…<br>보통 10~30초 정도 걸립니다</div></div>`;
-
-  const MODELS = ['gemini-3.1-flash-lite-image', 'gemini-3.1-flash-image'];
-
-  try {
-    for (let i = 0; i < count; i++) {
-      if (i > 0) await new Promise(r => setTimeout(r, 1500));
-
-      setImgStatus(`${i + 1}/${count}번째 시안 생성 중...`);
-      const prompt = buildImgPrompt(topic, i);
-
-      const data = await callGemini(MODELS, apiKey, {
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { imageConfig: { aspectRatio: imgSel.ratio } }
-      });
-
-      let imgUrl = null;
-      for (const part of data.candidates?.[0]?.content?.parts || []) {
-        if (part.inlineData?.data) {
-          imgUrl = `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
-          break;
-        }
-      }
-      if (!imgUrl) throw new Error('이미지를 생성하지 못했습니다.');
-
-      imgResults.push({
-        title: (VARIANTS[i] || VARIANTS[0]).title,
-        url: imgUrl,
-        prompt,
-        at: new Date().toLocaleTimeString('ko-KR')
-      });
-      renderCanvas();
-    }
-    setImgStatus(`✓ ${count}종 생성 완료! 우측 캔버스에서 확인하세요`, 'done');
-  } catch (err) {
-    const msg = humanizeApiError(err);
-    setImgStatus('❗ ' + msg, 'error');
-    if (!imgResults.length) {
-      document.getElementById('canvas-area').innerHTML = `<div class="imgerr"><strong>이미지 생성 실패</strong><br>${escapeHtml(msg)}</div>`;
-    } else {
-      renderCanvas();
-    }
-  } finally {
-    btn.disabled = false;
-    document.getElementById('imggen-btn-text').textContent = '🎨 홍보 이미지 생성';
-  }
-}
-
 function renderCanvasBadges() {
   document.getElementById('canvas-badges').innerHTML = `
     <span class="cbadge ratio">📐 ${escapeHtml(imgSel.ratio)}</span>
@@ -1316,63 +1018,8 @@ function renderCanvasBadges() {
     <span class="cbadge tone">🎨 ${escapeHtml(imgSel.tone)}</span>`;
 }
 
-function renderCanvas() {
-  renderCanvasBadges();
-  const area = document.getElementById('canvas-area');
-  if (!imgResults.length) return;
-  const cls = imgResults.length > 1 ? canvasView : 'stack';
-  area.innerHTML = `<div class="shot-grid ${cls}">` + imgResults.map((r, i) => `
-    <div class="shot">
-      <div class="shot-head">
-        <span class="shot-title">${escapeHtml(r.title)}</span>
-        <span class="shot-time">${escapeHtml(r.at)}</span>
-      </div>
-      <img class="shot-img" src="${r.url}" alt="${escapeHtml(r.title)}" onclick="openLightbox(${i})">
-      <div class="shot-foot">
-        <button onclick="openLightbox(${i})">🔍 확대</button>
-        <button onclick="downloadShot(${i})">⬇ PNG 저장</button>
-        <button id="shot-copy-${i}" onclick="copyShotPrompt(${i})">영문 프롬프트</button>
-      </div>
-    </div>`).join('') + '</div>';
-}
-
-function downloadShot(i) {
-  const r = imgResults[i];
-  if (!r) return;
-  const a = document.createElement('a');
-  a.href = r.url;
-  a.download = `promo_image_${i + 1}.png`;
-  a.click();
-}
-
-function copyShotPrompt(i) {
-  const r = imgResults[i];
-  if (!r) return;
-  navigator.clipboard.writeText(r.prompt).then(() => {
-    const btn = document.getElementById('shot-copy-' + i);
-    btn.textContent = '✓ 복사됨';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = '영문 프롬프트'; btn.classList.remove('copied'); }, 2000);
-  });
-}
-
-function openLightbox(i) {
-  const r = imgResults[i];
-  if (!r) return;
-  document.getElementById('lightbox-img').src = r.url;
-  document.getElementById('lightbox').classList.add('open');
-}
-
-function closeLightbox(e) {
-  if (e && e.target && e.target.tagName === 'IMG') return;
-  document.getElementById('lightbox').classList.remove('open');
-}
-
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    document.getElementById('lightbox').classList.remove('open');
-    closeHelp();
-  }
+  if (e.key === 'Escape') closeHelp();
 });
 
 (function init() {
@@ -1896,135 +1543,23 @@ JSON만 반환 (마크다운 코드블록 없이):
     prompt = body + (outputFormat === 'html' ? genericHtmlOutputBlock(topic, '#', today) : genericArticleOutputBlock());
   }
 
-  document.getElementById('prompt-output').value = prompt;
-  document.querySelector('.prompt-bar span').textContent = '생성된 프롬프트';
-  // 프롬프트가 바뀌면 이전 글은 더 이상 대응되지 않으므로 접어둔다
-  document.getElementById('article-wrap').style.display = 'none';
-  document.getElementById('article-output').value = '';
-  setWriteStatus('버튼을 누르면 위 프롬프트로 완성된 글을 만들어 아래에 보여줍니다');
-  renderSummaryChips();
-  document.getElementById('result-empty').style.display = 'none';
-
-  const imgOn = document.getElementById('chk-imggen').checked;
-  document.getElementById('result-tabs').style.display = (imgOn || imgResults.length || imgPromptCards.length) ? '' : 'none';
-  setResultTab('prompt');
-
-  if (outputHow === 'auto') {
-    await autoWrite(prompt);
-  } else {
-    setStatus('✓ 프롬프트 생성 완료! 복사 후 Claude.ai에 붙여넣으세요', 'done');
-  }
-}
-
-// 자동 생성 — 조립한 프롬프트를 Gemini에 그대로 보내 완성 원고를 받는다
-const TEXT_MODELS = ['gemini-3.1-flash', 'gemini-3.1-flash-lite', 'gemini-2.5-flash'];
-
-function setWriteStatus(msg, type = '') {
-  const bar = document.getElementById('write-status');
-  bar.className = 'status-bar' + (type ? ' ' + type : '');
-  bar.innerHTML = `<span>${escapeHtml(msg)}</span>`;
-}
-
-// 생성된 프롬프트 그대로 + 분량 지시를 덧붙여 1,500~2,000자 본문을 받는다
-async function writeArticle() {
-  const basePrompt = document.getElementById('prompt-output').value.trim();
-  if (!basePrompt) {
-    setWriteStatus('❗ 먼저 프롬프트를 생성해주세요', 'error');
-    return;
-  }
-
-  const keyInput = document.getElementById('inp-apikey');
-  const apiKey = keyInput.value.trim();
-  if (!apiKey) {
-    document.getElementById('apikey-card').style.display = '';   // 키 카드를 드러내 입력을 유도한다
-    loadSavedKey();
-    if (!keyInput.value.trim()) {
-      setWriteStatus('❗ 글 생성에는 Gemini API 키가 필요합니다. 왼쪽 하단 키 카드에 입력해주세요 (무료 발급 가능)', 'error');
-      keyInput.focus();
-      return;
-    }
-  }
-
-  const prompt = basePrompt + `
+  // 분량 지시를 프롬프트 끝에 붙여, 붙여넣기만 해도 원하는 길이로 나오게 한다
+  prompt += `
 
 [분량 지시 — 위 지시보다 우선한다]
 - 본문을 공백 포함 1,500~2,000자로 작성하라. 이 범위를 벗어나지 마라.
 - 분량을 채우려고 같은 말을 반복하거나 군더더기 문장을 넣지 마라. 범위 안에서 밀도를 높여라.
 - 구조 항목이 많아 분량이 초과될 것 같으면, 항목을 빠뜨리지 말고 각 항목의 서술을 압축하라.`;
 
-  const btn = document.getElementById('btn-write');
-  const label = document.getElementById('write-btn-text');
-  btn.disabled = true;
-  label.textContent = '글 작성 중...';
-  setWriteStatus('Gemini가 글을 작성하고 있습니다… 보통 20~60초 걸립니다');
+  document.getElementById('prompt-output').value = prompt;
+  renderSummaryChips();
+  document.getElementById('result-empty').style.display = 'none';
 
-  try {
-    const data = await callGemini(TEXT_MODELS, document.getElementById('inp-apikey').value.trim(), {
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.9, maxOutputTokens: 8192 }
-    });
+  const imgOn = document.getElementById('chk-imggen').checked;
+  document.getElementById('result-tabs').style.display = (imgOn || imgPromptCards.length) ? '' : 'none';
+  setResultTab('prompt');
 
-    const text = (data.candidates?.[0]?.content?.parts || [])
-      .map(p => p.text || '').join('').trim();
-    if (!text) throw new Error('빈 응답을 받았습니다. 잠시 후 다시 시도해주세요.');
-
-    document.getElementById('article-output').value = text;
-    document.getElementById('article-count').textContent = `${text.length.toLocaleString()}자`;
-    document.getElementById('article-wrap').style.display = '';
-    setWriteStatus(`✓ 글 생성 완료 (${text.length.toLocaleString()}자) — 아래에서 복사하세요`, 'done');
-    document.getElementById('article-wrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  } catch (err) {
-    setWriteStatus('❗ ' + humanizeApiError(err), 'error');
-  } finally {
-    btn.disabled = false;
-    label.textContent = '✍️ 이 프롬프트로 글 생성 (1,500~2,000자)';
-  }
-}
-
-function copyArticle() {
-  const area = document.getElementById('article-output');
-  navigator.clipboard.writeText(area.value).then(() => {
-    const btn = document.getElementById('btn-copy-article');
-    btn.textContent = '✓ 복사됨';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 2000);
-  });
-}
-
-async function autoWrite(prompt) {
-  const apiKey = requireKey(setStatus);
-  if (!apiKey) return;
-
-  const btn = document.getElementById('btn-gen');
-  const label = document.getElementById('btn-text');
-  btn.disabled = true;
-  label.textContent = '글 작성 중...';
-  setStatus('Gemini가 글을 작성하고 있습니다… 보통 20~60초 걸립니다');
-
-  const area = document.getElementById('prompt-output');
-  const original = area.value;
-
-  try {
-    const data = await callGemini(TEXT_MODELS, apiKey, {
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.9, maxOutputTokens: 8192 }
-    });
-
-    const text = (data.candidates?.[0]?.content?.parts || [])
-      .map(p => p.text || '').join('').trim();
-
-    if (!text) throw new Error('빈 응답을 받았습니다. 잠시 후 다시 시도해주세요.');
-
-    area.value = text;
-    document.querySelector('.prompt-bar span').textContent = '자동 생성된 글';
-    setStatus('✓ 글 자동 생성 완료! 복사해서 블로그에 붙여넣으세요', 'done');
-  } catch (err) {
-    area.value = original;   // 실패 시 프롬프트를 되살려 수동 경로를 남긴다
-    setStatus('❗ ' + humanizeApiError(err) + ' (프롬프트는 그대로 남겨뒀습니다)', 'error');
-  } finally {
-    btn.disabled = false;
-    label.textContent = outputHow === 'auto' ? '✦ 글 자동 생성' : '✦ 프롬프트 생성';
-  }
+  setStatus('✓ 프롬프트 생성 완료! 복사 후 Claude.ai에 붙여넣으세요 (1,500~2,000자로 작성됩니다)', 'done');
 }
 
 function escapeHtml(str) {
