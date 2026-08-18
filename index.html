@@ -461,9 +461,15 @@ textarea.form-input{min-height:82px;line-height:1.75}
     <div class="section-divider"><span>SEO 설정</span></div>
 
     <div class="form-group">
+      <label class="form-label">주제 키워드 <span class="label-badge opt">선택</span></label>
+      <input id="inp-topickw" class="form-input" type="text" placeholder="예: 부동산 창업, 공인중개사 개업, 경매 투자 등">
+      <div class="char-hint">글 전체가 다룰 큰 주제 영역입니다</div>
+    </div>
+
+    <div class="form-group">
       <label class="form-label">타겟 키워드 <span class="label-badge seo">SEO 필수</span></label>
       <input id="inp-keyword" class="form-input" type="text" placeholder="예: 창업CEO과정, 서울 부동산실무학원, 서울 경매학원, 부동산 디벨로퍼 등">
-      <div class="char-hint">H1·제목·첫 문단에 자동 배치됩니다</div>
+      <div class="char-hint">실제 검색 노출을 노리는 핵심어 — H1·제목·첫 문단에 자동 배치됩니다</div>
     </div>
 
     <div class="form-group">
@@ -1664,6 +1670,7 @@ async function generate() {
   let prompt = '';
 
   if (currentContentType === 'naver' || currentContentType === 'tistory') {
+    const topicKw  = document.getElementById('inp-topickw').value.trim();
     const keyword  = document.getElementById('inp-keyword').value.trim();
     const url      = document.getElementById('inp-url').value.trim() || '#';
     const extra    = document.getElementById('inp-extra').value.trim();
@@ -1690,6 +1697,7 @@ async function generate() {
 - 단순히 생략하거나 "(미입력)" 문구를 그대로 출력하지 마세요. 반드시 실제 콘텐츠로 채우세요.
 
 [글감]
+- 주제 키워드: ${topicKw || '(미입력 — 타겟 키워드가 속한 상위 주제 영역을 스스로 판단해 글의 큰 줄기로 삼을 것)'}
 - 타겟 키워드: ${topic}
 - 검색 의도: ${intentMap[currentIntent]}
 - 포스팅 제목: ${title}
