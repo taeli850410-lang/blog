@@ -811,9 +811,13 @@ function setContentType(btn) {
   currentContentType = btn.dataset.type;
   const isBlog = (currentContentType === 'naver' || currentContentType === 'tistory');
   document.getElementById('seo-only-block').style.display = isBlog ? '' : 'none';
-  document.getElementById('group-article-fields').style.display = isBlog ? 'none' : '';
+  // 타깃 독자·분량·필자 정보는 스펙상 티스토리·기사글·컬럼글 공통 변수다
+  document.getElementById('group-article-fields').style.display = currentContentType === 'naver' ? 'none' : '';
   setOutputFormat(isBlog ? 'html' : 'article');
   renderTypeHint();
+  // 분량 입력칸의 예시를 선택한 유형의 권장 분량으로 바꾼다
+  const lenEl = document.getElementById('inp-length');
+  if (lenEl) lenEl.placeholder = `비워두면 ${TYPE_HINTS[currentContentType].length} 기준으로 작성됩니다`;
 }
 
 function setOutputFormat(fmt) {
@@ -1814,8 +1818,17 @@ JSON만 반환 (마크다운 코드블록 없이):
         prompt = body + genericArticleOutputBlock();
       }
     } else {
-      // 티스토리 블로그 SEO
-      const body = glamBlock + '\n\n' + TISTORY_SPEC(topic);
+      // 티스토리 블로그 SEO — 공통 입력 변수(타깃 독자·분량·필자 정보)를 함께 전달한다
+      const audience   = document.getElementById('inp-audience').value.trim();
+      const length     = document.getElementById('inp-length').value.trim();
+      const authorInfo = document.getElementById('inp-author').value.trim();
+
+      const commonVars =
+`- 타깃 독자: ${audience || '(미지정 — 주제에 가장 적합한 독자층을 스스로 설정하고 글 첫머리에 밝힐 것)'}
+- 분량: ${length || '(미지정 — 2,000~4,000자 기준)'}
+- 필자 정보/소속: ${authorInfo || '(미지정 — 해당 분야를 직접 경험한 실무자 시점으로 서술)'}`;
+
+      const body = glamBlock + '\n' + commonVars + '\n\n' + TISTORY_SPEC(topic);
       prompt = body + (outputFormat === 'html' ? genericHtmlOutputBlock(topic, url, today) : genericArticleOutputBlock());
     }
 
