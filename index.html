@@ -344,6 +344,18 @@ textarea.form-input{min-height:82px;line-height:1.75}
 .btn-copy-sm:hover{border-color:var(--primary-str);color:var(--primary)}
 .btn-copy-sm.copied{border-color:rgba(52,211,153,.5);color:var(--green)}
 
+/* WRITE ARTICLE BUTTON */
+.btn-write{
+  background:linear-gradient(135deg,#4f46e5,#3b82f6);color:#fff;border:none;
+  font-family:inherit;font-size:15px;font-weight:800;
+  padding:15px;border-radius:var(--r);cursor:pointer;width:100%;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:filter .15s,transform .1s;box-shadow:var(--shadow);margin-bottom:12px;
+}
+.btn-write:hover{filter:brightness(1.12)}
+.btn-write:active{transform:translateY(1px)}
+.btn-write:disabled{background:var(--surface3);color:var(--dim);cursor:not-allowed;filter:none;box-shadow:none}
+
 /* FREE / KEY BADGE */
 .mode-badge{font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;border:1px solid;margin-left:5px}
 .mode-badge.free{background:rgba(52,211,153,.14);color:var(--green);border-color:rgba(52,211,153,.3)}
@@ -461,7 +473,7 @@ textarea.form-input{min-height:82px;line-height:1.75}
     <div class="section-divider"><span>SEO 설정</span></div>
 
     <div class="form-group">
-      <label class="form-label">주제 키워드 <span class="label-badge opt">선택</span></label>
+      <label class="form-label">주제 키워드 <span class="label-badge seo">SEO 필수</span></label>
       <input id="inp-topickw" class="form-input" type="text" placeholder="예: 부동산 창업, 공인중개사 개업, 경매 투자 등">
       <div class="char-hint">글 전체가 다룰 큰 주제 영역입니다</div>
     </div>
@@ -763,6 +775,23 @@ textarea.form-input{min-height:82px;line-height:1.75}
           <button class="btn-copy" id="btn-copy-prompt" onclick="copyPrompt()">복사</button>
         </div>
         <textarea class="prompt-area" id="prompt-output" readonly></textarea>
+      </div>
+
+      <!-- 이 프롬프트로 글 생성 -->
+      <button class="btn-write" id="btn-write" onclick="writeArticle()">
+        <span id="write-btn-text">✍️ 이 프롬프트로 글 생성 (1,500~2,000자)</span>
+      </button>
+
+      <div class="status-bar" id="write-status" style="margin-bottom:14px">
+        <span>버튼을 누르면 위 프롬프트로 완성된 글을 만들어 아래에 보여줍니다</span>
+      </div>
+
+      <div class="prompt-wrap" id="article-wrap" style="display:none">
+        <div class="prompt-bar">
+          <span>완성된 글 <span id="article-count" class="mode-badge free"></span></span>
+          <button class="btn-copy" id="btn-copy-article" onclick="copyArticle()">복사</button>
+        </div>
+        <textarea class="prompt-area" id="article-output" readonly></textarea>
       </div>
 
     </div>
@@ -1666,6 +1695,13 @@ async function generate() {
     return;
   }
 
+  const isBlogType = currentContentType === 'naver' || currentContentType === 'tistory';
+  if (isBlogType && !document.getElementById('inp-topickw').value.trim()) {
+    setStatus('❗ 주제 키워드는 SEO 필수 항목입니다', 'error');
+    document.getElementById('inp-topickw').focus();
+    return;
+  }
+
   const today = new Date().toISOString().split('T')[0];
   let prompt = '';
 
@@ -1697,7 +1733,7 @@ async function generate() {
 - 단순히 생략하거나 "(미입력)" 문구를 그대로 출력하지 마세요. 반드시 실제 콘텐츠로 채우세요.
 
 [글감]
-- 주제 키워드: ${topicKw || '(미입력 — 타겟 키워드가 속한 상위 주제 영역을 스스로 판단해 글의 큰 줄기로 삼을 것)'}
+- 주제 키워드: ${topicKw}
 - 타겟 키워드: ${topic}
 - 검색 의도: ${intentMap[currentIntent]}
 - 포스팅 제목: ${title}
@@ -1862,6 +1898,10 @@ JSON만 반환 (마크다운 코드블록 없이):
 
   document.getElementById('prompt-output').value = prompt;
   document.querySelector('.prompt-bar span').textContent = '생성된 프롬프트';
+  // 프롬프트가 바뀌면 이전 글은 더 이상 대응되지 않으므로 접어둔다
+  document.getElementById('article-wrap').style.display = 'none';
+  document.getElementById('article-output').value = '';
+  setWriteStatus('버튼을 누르면 위 프롬프트로 완성된 글을 만들어 아래에 보여줍니다');
   renderSummaryChips();
   document.getElementById('result-empty').style.display = 'none';
 
@@ -1878,6 +1918,78 @@ JSON만 반환 (마크다운 코드블록 없이):
 
 // 자동 생성 — 조립한 프롬프트를 Gemini에 그대로 보내 완성 원고를 받는다
 const TEXT_MODELS = ['gemini-3.1-flash', 'gemini-3.1-flash-lite', 'gemini-2.5-flash'];
+
+function setWriteStatus(msg, type = '') {
+  const bar = document.getElementById('write-status');
+  bar.className = 'status-bar' + (type ? ' ' + type : '');
+  bar.innerHTML = `<span>${escapeHtml(msg)}</span>`;
+}
+
+// 생성된 프롬프트 그대로 + 분량 지시를 덧붙여 1,500~2,000자 본문을 받는다
+async function writeArticle() {
+  const basePrompt = document.getElementById('prompt-output').value.trim();
+  if (!basePrompt) {
+    setWriteStatus('❗ 먼저 프롬프트를 생성해주세요', 'error');
+    return;
+  }
+
+  const keyInput = document.getElementById('inp-apikey');
+  const apiKey = keyInput.value.trim();
+  if (!apiKey) {
+    document.getElementById('apikey-card').style.display = '';   // 키 카드를 드러내 입력을 유도한다
+    loadSavedKey();
+    if (!keyInput.value.trim()) {
+      setWriteStatus('❗ 글 생성에는 Gemini API 키가 필요합니다. 왼쪽 하단 키 카드에 입력해주세요 (무료 발급 가능)', 'error');
+      keyInput.focus();
+      return;
+    }
+  }
+
+  const prompt = basePrompt + `
+
+[분량 지시 — 위 지시보다 우선한다]
+- 본문을 공백 포함 1,500~2,000자로 작성하라. 이 범위를 벗어나지 마라.
+- 분량을 채우려고 같은 말을 반복하거나 군더더기 문장을 넣지 마라. 범위 안에서 밀도를 높여라.
+- 구조 항목이 많아 분량이 초과될 것 같으면, 항목을 빠뜨리지 말고 각 항목의 서술을 압축하라.`;
+
+  const btn = document.getElementById('btn-write');
+  const label = document.getElementById('write-btn-text');
+  btn.disabled = true;
+  label.textContent = '글 작성 중...';
+  setWriteStatus('Gemini가 글을 작성하고 있습니다… 보통 20~60초 걸립니다');
+
+  try {
+    const data = await callGemini(TEXT_MODELS, document.getElementById('inp-apikey').value.trim(), {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.9, maxOutputTokens: 8192 }
+    });
+
+    const text = (data.candidates?.[0]?.content?.parts || [])
+      .map(p => p.text || '').join('').trim();
+    if (!text) throw new Error('빈 응답을 받았습니다. 잠시 후 다시 시도해주세요.');
+
+    document.getElementById('article-output').value = text;
+    document.getElementById('article-count').textContent = `${text.length.toLocaleString()}자`;
+    document.getElementById('article-wrap').style.display = '';
+    setWriteStatus(`✓ 글 생성 완료 (${text.length.toLocaleString()}자) — 아래에서 복사하세요`, 'done');
+    document.getElementById('article-wrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } catch (err) {
+    setWriteStatus('❗ ' + humanizeApiError(err), 'error');
+  } finally {
+    btn.disabled = false;
+    label.textContent = '✍️ 이 프롬프트로 글 생성 (1,500~2,000자)';
+  }
+}
+
+function copyArticle() {
+  const area = document.getElementById('article-output');
+  navigator.clipboard.writeText(area.value).then(() => {
+    const btn = document.getElementById('btn-copy-article');
+    btn.textContent = '✓ 복사됨';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 2000);
+  });
+}
 
 async function autoWrite(prompt) {
   const apiKey = requireKey(setStatus);
